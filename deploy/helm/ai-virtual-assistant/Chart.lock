@@ -12,13 +12,13 @@ dependencies:
   repository: https://rh-ai-kickstart.github.io/ai-architecture-charts
   version: 0.1.0
 - name: llama-stack
-  repository: https://rh-ai-kickstart.github.io/ai-architecture-charts
-  version: 0.2.9
+  repository: file://../../../../ai-architecture-charts/llama-stack/helm
+  version: 0.2.12
 - name: configure-pipeline
   repository: https://rh-ai-kickstart.github.io/ai-architecture-charts
   version: 0.1.0
 - name: ingestion-pipeline
-  repository: https://rh-ai-kickstart.github.io/ai-architecture-charts
-  version: 0.2.9
-digest: sha256:ee20a14dfeb6fffeb87e5459416b647209395a7f602c9c7734e6271012b8acda
-generated: "2025-06-17T16:23:01.104322255-04:00"
+  repository: file://../../../../ai-architecture-charts/ingestion-pipeline/helm
+  version: 0.2.12
+digest: sha256:15ff642aed23406a27c62cc901c38b654ab1e43ce30703daca2e4623b0b49fdd
+generated: "2025-07-08T11:06:07.556553-05:00"
