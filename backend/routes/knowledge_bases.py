@@ -12,6 +12,7 @@ Key Features:
 - Vector database name as primary identifier for LlamaStack integration
 - Read-only operations after creation (knowledge bases cannot be modified)
 """
+
 import os
 from typing import List
 
@@ -21,7 +22,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .. import models, schemas
-from ..api.llamastack import client
+from ..api.llamastack import sync_client
 from ..database import get_db
 from ..utils.logging_config import get_logger
 
@@ -246,7 +247,7 @@ async def sync_knowledge_bases(db: AsyncSession):
         logger.info("Starting knowledge base sync")
         logger.debug("Fetching vector databases from LlamaStack")
         try:
-            response = client.vector_dbs.list()
+            response = sync_client.vector_dbs.list()
 
             if isinstance(response, list):
                 vector_dbs = [item.__dict__ for item in response]

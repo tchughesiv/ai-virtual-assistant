@@ -12,7 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from .. import models
-from ..api.llamastack import client
+from ..api.llamastack import get_client
 from ..database import get_db
 from ..utils.logging_config import get_logger
 
@@ -54,6 +54,7 @@ async def get_all_tool_groups(db: AsyncSession = Depends(get_db)):
         }
 
     # Get builtin tools from LlamaStack
+    client = get_client(None)
     try:
         response = client.tools.list()
         if isinstance(response, list):

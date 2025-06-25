@@ -8,7 +8,9 @@ pydantic
 python-dotenv
 bcrypt
 pydantic[email]
-llama_stack_client==0.2.6
+llama_stack_client==0.2.12
+fire
+requests
 vulture
 black
 isort

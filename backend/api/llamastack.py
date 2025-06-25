@@ -9,8 +9,13 @@ load_dotenv()
 
 LLAMASTACK_URL = os.getenv("LLAMASTACK_URL", "http://localhost:8321")
 
-client = LlamaStackClient(
-    base_url=LLAMASTACK_URL,
-)
+def get_client(api_key: str | None) -> LlamaStackClient:
+    client = LlamaStackClient(
+        base_url=LLAMASTACK_URL,
+    )
+    if api_key is not None:
+        client.api_key = api_key
+    client.agents = EnhancedAgentResource(client)
+    return client
 
-client.agents = EnhancedAgentResource(client)
+sync_client = get_client(os.getenv("TOKEN"))

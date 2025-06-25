@@ -5,7 +5,7 @@ import os
 from llama_stack_client.lib.agents.react.tool_parser import ReActOutput
 
 from ..agents import ExistingAgent, ExistingReActAgent
-from ..api.llamastack import client
+from ..api.llamastack import get_client
 from ..utils.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -36,7 +36,7 @@ class Chat:
         self.log = logger
 
     def _get_client(self):
-        return client
+        return get_client(None)
 
     def _get_agent_config(self, agent_id: str):
         """
