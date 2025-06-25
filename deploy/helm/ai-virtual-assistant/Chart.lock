@@ -3,7 +3,7 @@ dependencies:
   repository: https://rh-ai-kickstart.github.io/ai-architecture-charts
   version: 0.1.0
 - name: pgvector
-  repository: https://rh-ai-kickstart.github.io/ai-architecture-charts
+  repository: file://../../../../ai-architecture-charts/pgvector/helm
   version: 0.1.0
 - name: mcp-weather
   repository: https://rh-ai-kickstart.github.io/ai-architecture-charts
@@ -12,13 +12,13 @@ dependencies:
   repository: https://rh-ai-kickstart.github.io/ai-architecture-charts
   version: 0.1.0
 - name: llama-stack
-  repository: https://rh-ai-kickstart.github.io/ai-architecture-charts
-  version: 0.2.9
+  repository: file://../../../../ai-architecture-charts/llama-stack/helm
+  version: 0.2.12
 - name: configure-pipeline
   repository: https://rh-ai-kickstart.github.io/ai-architecture-charts
   version: 0.1.0
 - name: ingestion-pipeline
-  repository: https://rh-ai-kickstart.github.io/ai-architecture-charts
-  version: 0.2.9
-digest: sha256:ee20a14dfeb6fffeb87e5459416b647209395a7f602c9c7734e6271012b8acda
-generated: "2025-06-17T16:23:01.104322255-04:00"
+  repository: file://../../../../ai-architecture-charts/ingestion-pipeline/helm
+  version: 0.2.12
+digest: sha256:1c22edf6fb9ffcb8ba3ae620ec45cbc8b94910a1a37b7d19bbff26b90a63e9da
+generated: "2025-07-09T10:51:40.913809-05:00"

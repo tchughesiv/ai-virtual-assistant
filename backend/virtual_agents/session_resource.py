@@ -1,19 +1,19 @@
 from __future__ import annotations
 
 import logging
-from typing import List
 import os
+from typing import List
 
 import httpx
 from fastapi import HTTPException
 from llama_stack_client._types import NOT_GIVEN, Body, Headers, NotGiven, Query
-from llama_stack_client.resources.agents.session import SessionResource
+from llama_stack_client.resources.agents.session import AsyncSessionResource
 
 log = logging.getLogger(__name__)
 
 
-class EnhancedSessionResource(SessionResource):
-    def list(
+class EnhancedSessionResource(AsyncSessionResource):
+    async def list(
         self,
         agent_id: str,
         *,
@@ -36,11 +36,11 @@ class EnhancedSessionResource(SessionResource):
             import httpx
 
             # Use direct HTTP request to avoid client parsing issues
-            with httpx.Client() as http_client:
+            async with httpx.AsyncClient() as http_client:
                 llamastack_url = os.getenv("LLAMASTACK_URL", "http://localhost:8321")
-                response = http_client.get(
+                response = await http_client.get(
                     f"{llamastack_url}/v1/agents/{agent_id}/sessions",
-                    headers={"Accept": "application/json"},
+                    headers=self._client.default_headers,
                     timeout=30.0,
                 )
                 response.raise_for_status()
@@ -66,7 +66,7 @@ class EnhancedSessionResource(SessionResource):
                 status_code=500, detail=f"Failed to fetch sessions: {str(e)}"
             )
 
-    def delete(
+    async def delete(
         self,
         session_id: str,
         agent_id: str,
@@ -95,11 +95,11 @@ class EnhancedSessionResource(SessionResource):
             import httpx
 
             # Use direct HTTP request to delete session
-            with httpx.Client() as http_client:
+            async with httpx.AsyncClient() as http_client:
                 llamastack_url = os.getenv("LLAMASTACK_URL", "http://localhost:8321")
-                response = http_client.delete(
+                response = await http_client.delete(
                     f"{llamastack_url}/v1/agents/{agent_id}/session/{session_id}",
-                    headers={"Accept": "application/json"},
+                    headers=self._client.default_headers,
                     timeout=30.0,
                 )
                 response.raise_for_status()

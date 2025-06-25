@@ -135,12 +135,12 @@ minio:
     password: minio_rag_password
     host: minio
     port: "9000"
-  
-    # Upload sample files to the minio bucket 
+
+    # Upload sample files to the minio bucket
   sampleFileUpload:
     enabled: true
     bucket: documents
-    urls: 
+    urls:
     - https://raw.githubusercontent.com/burrsutter/sample-pdfs/main/FantaCo/HR/FantaCo-Fabulous-HR-Benefits.pdf
 
 
