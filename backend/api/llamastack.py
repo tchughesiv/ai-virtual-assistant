@@ -24,8 +24,8 @@ def get_client(api_key: Optional[str]) -> LlamaStackClient:
 
 def get_client_from_request(request: Optional[Request]) -> LlamaStackClient:
     if request is not None:
-        for h, v in request.headers.__dict__:
-            print(f"{h}: {v}")
+        for h in request.headers.items:
+            print(f"{h}")
         return get_client(request.headers.get("X-Forwarded-Access-Token"))
     return get_client()
 
