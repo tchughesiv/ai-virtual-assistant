@@ -41,7 +41,7 @@ spec:
             - -email-domain=*
             - -upstream=http://localhost:8000
             - -pass-user-headers=true
-            - -pass-authorization-header=true
+            - -pass-user-bearer-token=true
             - -tls-cert=/etc/tls/private/tls.crt
             - -tls-key=/etc/tls/private/tls.key
             - -cookie-secret-file=/etc/proxy/secrets/session_secret
