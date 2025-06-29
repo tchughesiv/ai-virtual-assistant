@@ -21,7 +21,7 @@ import json
 import logging
 from typing import Any, Dict, List, Literal, Optional
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from sqlalchemy.dialects.postgresql import insert
@@ -30,7 +30,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from backend.database import get_db
 
 from .. import models
-from ..api.llamastack import get_client
+from ..api.llamastack import get_client, get_client_from_request
 from .chat import Chat
 from .virtual_assistants import read_virtual_assistant
 
@@ -75,7 +75,7 @@ router = APIRouter(prefix="/llama_stack", tags=["llama_stack"])
 
 # Initialize LlamaStack client
 @router.get("/llms", response_model=List[Dict[str, Any]])
-async def get_llms():
+async def get_llms(request: Request):
     """
     Retrieve all available Large Language Models from LlamaStack.
 
@@ -92,7 +92,7 @@ async def get_llms():
     Raises:
         HTTPException: 502 if LlamaStack is unreachable, 500 for other errors
     """
-    client = get_client()
+    client = get_client_from_request(request)
     try:
         log.info(f"Attempting to fetch models from LlamaStack at {client.base_url}")
         try:
