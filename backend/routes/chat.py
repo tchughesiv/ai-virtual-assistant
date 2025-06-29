@@ -36,7 +36,7 @@ class Chat:
         self.log = logger
 
     def _get_client(self):
-        return get_client(None)
+        return get_client()
 
     def _get_agent_config(self, agent_id: str):
         """

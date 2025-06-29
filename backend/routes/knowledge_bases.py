@@ -22,7 +22,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .. import models, schemas
-from ..api.llamastack import sync_client
+from ..api.llamastack import get_client, sync_client
 from ..database import get_db
 from ..utils.logging_config import get_logger
 
@@ -152,6 +152,7 @@ async def delete_knowledge_base(
     kb_name = db_kb.name  # Store name before deletion
 
     # First, try to delete from LlamaStack
+    client = get_client()
     try:
         logger.info(f"Deleting knowledge base from LlamaStack: {vector_db_name}")
         client.vector_dbs.unregister(vector_db_name)

@@ -57,7 +57,7 @@ async def create_virtual_assistant(va: schemas.VirtualAssistantCreate):
     Raises:
         HTTPException: If creation fails
     """
-    client = get_client(None)
+    client = get_client()
     try:
         sampling_params = {
             "strategy": get_strategy(va.temperature, va.top_p),
@@ -164,7 +164,7 @@ async def get_virtual_assistants():
         List of all virtual assistants configured in the system
     """
     # get all virtual assitants or agents from llama stack
-    client = get_client(None)
+    client = get_client()
     agents = client.agents.list()
     response_list = []
     for agent in agents:
@@ -186,7 +186,7 @@ async def read_virtual_assistant(va_id: str):
     Raises:
         HTTPException: If virtual assistant not found
     """
-    client = get_client(None)
+    client = get_client()
     agent = client.agents.retrieve(agent_id=va_id)
     return to_va_response(agent)
 
@@ -207,6 +207,6 @@ async def delete_virtual_assistant(va_id: str):
     Returns:
         None (204 No Content status)
     """
-    client = get_client(None)
+    client = get_client()
     client.agents.delete(agent_id=va_id)
     return None

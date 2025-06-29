@@ -54,7 +54,7 @@ async def get_all_tool_groups(db: AsyncSession = Depends(get_db)):
         }
 
     # Get builtin tools from LlamaStack
-    client = get_client(None)
+    client = get_client()
     try:
         response = client.tools.list()
         if isinstance(response, list):

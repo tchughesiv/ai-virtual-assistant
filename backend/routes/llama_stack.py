@@ -92,7 +92,7 @@ async def get_llms():
     Raises:
         HTTPException: 502 if LlamaStack is unreachable, 500 for other errors
     """
-    client = get_client(None)
+    client = get_client()
     try:
         log.info(f"Attempting to fetch models from LlamaStack at {client.base_url}")
         try:
@@ -153,7 +153,7 @@ async def get_knowledge_bases():
     Raises:
         HTTPException: If LlamaStack communication fails
     """
-    client = get_client(None)
+    client = get_client()
     try:
         kbs = client.vector_dbs.list()
         return [
@@ -188,7 +188,7 @@ async def get_tools():
     Raises:
         HTTPException: If LlamaStack communication fails
     """
-    client = get_client(None)
+    client = get_client()
     try:
         servers = client.toolgroups.list()
         return [
@@ -222,7 +222,7 @@ async def get_safety_models():
     Raises:
         HTTPException: If LlamaStack communication fails
     """
-    client = get_client(None)
+    client = get_client()
     try:
         models = client.models.list()
         safety_models = []
@@ -257,7 +257,7 @@ async def get_embedding_models():
     Raises:
         HTTPException: If LlamaStack communication fails
     """
-    client = get_client(None)
+    client = get_client()
     try:
         models = client.models.list()
         embedding_models = []
@@ -292,7 +292,7 @@ async def get_shields():
     Raises:
         HTTPException: If LlamaStack communication fails
     """
-    client = get_client(None)
+    client = get_client()
     try:
         shields = client.shields.list()
         shields_list = []
@@ -327,7 +327,7 @@ async def get_providers():
     Raises:
         HTTPException: If LlamaStack communication fails
     """
-    client = get_client(None)
+    client = get_client()
     try:
         providers = client.providers.list()
         return [
@@ -395,7 +395,7 @@ async def chat(
             - 400 if session ID is missing
             - 500 for internal server errors during chat processing
     """
-    client = get_client(None)
+    client = get_client()
     try:
         log.info(f"Received request: {request.model_dump()}")
 

@@ -74,7 +74,7 @@ async def get_chat_sessions(agent_id: str, limit: int = 50) -> List[dict]:
         log.info(f"Attempting to list sessions for agent {agent_id}")
 
         # Get the enhanced session resource
-        client = get_client(None)
+        client = get_client()
         session_resource: EnhancedSessionResource = client.agents.session
 
         # Call the enhanced list method - this now returns List[dict]
@@ -176,7 +176,7 @@ async def get_chat_session(session_id: str, agent_id: str) -> dict:
         log.info(f"Fetching session {session_id} for agent {agent_id}")
 
         # Verify agent exists
-        client = get_client(None)
+        client = get_client()
         try:
             agentResource: EnhancedAgentResource = client.agents
             agent = agentResource.retrieve(agent_id=agent_id)
@@ -283,7 +283,7 @@ async def delete_chat_session(session_id: str, agent_id: str) -> dict:
     """
     try:
         # Verify agent exists
-        client = get_client(None)
+        client = get_client()
         try:
             agent = client.agents.retrieve(agent_id=agent_id)
             log.info(f"Found agent: {agent.agent_id}")
@@ -345,7 +345,7 @@ async def create_chat_session(request: CreateSessionRequest) -> dict:
     """
     try:
         # Verify agent exists in LlamaStack
-        client = get_client(None)
+        client = get_client()
         try:
             agent = client.agents.retrieve(agent_id=request.agent_id)
             log.info(f"Found agent: {agent.agent_id}")
@@ -447,7 +447,7 @@ async def debug_session_listing(agent_id: str):
         log.info(f"=== DEBUG SESSION LISTING FOR AGENT {agent_id} ===")
 
         # Test 1: Check if agent exists
-        client = get_client(None)
+        client = get_client()
         try:
             agent = client.agents.retrieve(agent_id=agent_id)
             log.info(f"✅ Agent exists: {agent.agent_id}")
