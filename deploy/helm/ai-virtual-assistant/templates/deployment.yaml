@@ -1,3 +1,17 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: proxy-can-create-token-reviews
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:auth-delegator
+subjects:
+- kind: ServiceAccount
+  name: {{ include "ai-virtual-assistant.serviceAccountName" . }}
+  namespace: tommy
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -37,18 +51,19 @@ spec:
           args:
             - -provider=openshift
             - -https-address=:8888
-            - -http-address=
+            - -http-address=:8887
             - -email-domain=*
             - -upstream=http://localhost:8000
             - -pass-user-headers=true
             - -pass-access-token=true
-            - -pass-user-bearer-token=true
+            - -openshift-delegate-urls={"/validate-token":{"resource":"namespaces","verb":"get"}}
             - -tls-cert=/etc/tls/private/tls.crt
             - -tls-key=/etc/tls/private/tls.key
             - -cookie-secret-file=/etc/proxy/secrets/session_secret
-            - -openshift-service-account=ai-virtual-assistant-proxy-sa
+            - -openshift-service-account={{ include "ai-virtual-assistant.serviceAccountName" . }}
             - -openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
             - -skip-auth-regex=^/metrics
+            - -skip-auth-regex=^/validate$
           image: quay.io/openshift/origin-oauth-proxy:4.17
           imagePullPolicy: IfNotPresent
           ports:
