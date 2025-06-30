@@ -40,7 +40,6 @@ spec:
             - -http-address=
             - -email-domain=*
             - -upstream=http://localhost:8000
-            - -pass-basic-auth=false
             - -pass-user-headers=true
             - -pass-access-token=true
             - -pass-user-bearer-token=true
