@@ -95,7 +95,9 @@ def validate(auth_request: AuthRequest):
             print(f"{key}: {value}")
         if response.status_code == 200:
             return AuthResponse(
-                principal="test", attributes=None, message="Authentication successful"
+                principal="test",
+                attributes={"test", "test"},
+                message="Authentication successful",
             )
 
     return None
