@@ -90,9 +90,10 @@ def validate(auth_request: AuthRequest):
         token=auth_request.api_key,
         headers=auth_request.request.headers,
     )
-    for key, value in response.headers.items():
-        print(f"{key}: {value}")
-    if response.status_code == 200:
-        return AuthResponse(principal="test", message="Authentication successful")
+    if response is not None:
+        for key, value in response.headers.items():
+            print(f"{key}: {value}")
+        if response.status_code == 200:
+            return AuthResponse(principal="test", message="Authentication successful")
 
     return None
