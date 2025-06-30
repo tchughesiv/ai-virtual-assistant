@@ -93,6 +93,6 @@ def validate(auth_request: AuthRequest):
     for key, value in response.headers.items():
         print(f"{key}: {value}")
     if response.status_code == 200:
-        return AuthResponse(message="Authentication successful")
+        return AuthResponse(principal="test", message="Authentication successful")
 
     return None
