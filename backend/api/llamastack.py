@@ -51,4 +51,7 @@ def get_client_from_request(request: Optional[Request]) -> LlamaStackClient:
     return get_client()
 
 
+# curl http://localhost:8321/v1/models \
+#   -H "Authorization: Bearer sha256~IdijBSbm0v5eZf_9boG5WexDu8LdajWN0puEcyeupLc"
+
 sync_client = get_client(os.getenv("TOKEN"))
