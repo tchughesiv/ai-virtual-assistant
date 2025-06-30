@@ -54,6 +54,7 @@ spec:
             - -http-address=:8887
             - -email-domain=*
             - -upstream=http://localhost:8000
+            - -pass-basic-auth=false
             - -pass-user-headers=true
             - -pass-access-token=true
             - -openshift-delegate-urls={"/validate-token":{"resource":"namespaces","verb":"get"}}
