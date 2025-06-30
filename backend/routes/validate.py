@@ -91,7 +91,7 @@ def validate(auth_request: AuthRequest):
         headers=auth_request.request.headers,
     )
 
-    if response.status_code != 200:
+    if response is None or response.status_code != 200:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail="User not found"
         )
