@@ -52,7 +52,6 @@ def make_authorized_request(
         return response
     except requests.exceptions.HTTPError as e:
         print(f"HTTP Error: {e}")
-        print(f"Response content: {e.response.text}")
         return None
     except requests.exceptions.ConnectionError as e:
         print(f"Connection Error: {e}")
