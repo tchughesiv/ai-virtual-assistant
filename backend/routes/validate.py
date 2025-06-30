@@ -7,7 +7,7 @@ from llama_stack.distribution.server.auth_providers import AuthRequest, AuthResp
 router = APIRouter(prefix="/validate", tags=["validate"])
 
 
-def make_authorized_request(
+async def make_authorized_request(
     url, token, method="GET", data=None, json=None, headers=None, **kwargs
 ):
     """
@@ -40,7 +40,7 @@ def make_authorized_request(
         default_headers.update(headers)
 
     try:
-        response = requests.request(
+        response = await requests.request(
             method=method,
             url=url,
             headers=default_headers,
@@ -85,7 +85,7 @@ async def validate(auth_request: AuthRequest):
         HTTPException: 403 if the user is not found
     """
 
-    response = make_authorized_request(
+    response = await make_authorized_request(
         url="http://localhost:8887/validate-token",
         token=auth_request.api_key,
         headers=auth_request.request.headers,
