@@ -78,6 +78,7 @@ async def on_startup():
             logger.error(f"Failed to sync knowledge bases on startup: {str(e)}")
 
 
+app.include_router(validate.router, prefix="/")
 app.include_router(users.router, prefix="/api")
 app.include_router(mcp_servers.router, prefix="/api")
 app.include_router(tools.router, prefix="/api")
@@ -87,7 +88,6 @@ app.include_router(guardrails.router, prefix="/api")
 app.include_router(model_servers.router, prefix="/api")
 app.include_router(llama_stack.router, prefix="/api")
 app.include_router(chat_sessions.router, prefix="/api")
-app.include_router(validate.router, prefix="/validate")
 
 
 # Serve React App (frontend)
