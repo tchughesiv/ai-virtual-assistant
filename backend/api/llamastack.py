@@ -12,6 +12,29 @@ load_dotenv()
 LLAMASTACK_URL = os.getenv("LLAMASTACK_URL", "http://localhost:8321")
 
 
+def get_token_from_authorization_header(authorization_header: str):
+    """
+    Extracts the token from an Authorization header string.
+
+    Args:
+        authorization_header (str): The full value of the Authorization header,
+                                    e.g., "Bearer your_access_token".
+
+    Returns:
+        str or None: The extracted token string, or None if the header is invalid.
+    """
+    if not authorization_header:
+        return None
+
+    parts = authorization_header.split()
+    if len(parts) == 2 and parts[0].lower() == "bearer":
+        return parts[1]
+    elif len(parts) == 2 and parts[0].lower() == "token":  # For 'Token {token}' scheme
+        return parts[1]
+    else:
+        return None
+
+
 def get_client(api_key: Optional[str]) -> LlamaStackClient:
     client = LlamaStackClient(
         base_url=LLAMASTACK_URL,
@@ -26,7 +49,9 @@ def get_client_from_request(request: Optional[Request]) -> LlamaStackClient:
     if request is not None:
         for key, value in request.headers.items():
             print(f"{key}: {value}")
-        return get_client(request.headers.get("X-Forwarded-Access-Token"))
+        return get_client(
+            get_token_from_authorization_header(request.headers.get("Authorization"))
+        )
     return get_client()
 
 
