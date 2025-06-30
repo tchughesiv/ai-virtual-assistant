@@ -45,7 +45,7 @@ def get_client(api_key: Optional[str]) -> LlamaStackClient:
     return client
 
 
-def get_client_from_request_headers(request: Optional[Request]) -> LlamaStackClient:
+def get_client_from_request(request: Optional[Request]) -> LlamaStackClient:
     if request is not None:
         for key, value in request.headers.items():
             print(f"{key}: {value}")
