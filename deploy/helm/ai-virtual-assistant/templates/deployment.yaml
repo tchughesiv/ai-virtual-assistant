@@ -64,6 +64,7 @@ spec:
             - -openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
             - -skip-auth-regex=^/metrics
             - -skip-auth-regex=^/validate$
+            - -skip-auth-regex=^/validate/$
           image: quay.io/openshift/origin-oauth-proxy:4.17
           imagePullPolicy: IfNotPresent
           ports:
