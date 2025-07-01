@@ -57,7 +57,6 @@ spec:
             - -pass-basic-auth=false
             - -pass-user-headers=true
             - -pass-access-token=true
-            - -set-xauthrequest=true
             - -openshift-delegate-urls={"/validate-token":{}}
             - -tls-cert=/etc/tls/private/tls.crt
             - -tls-key=/etc/tls/private/tls.key

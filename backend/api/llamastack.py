@@ -49,8 +49,7 @@ def get_client(api_key: Optional[str]) -> AsyncLlamaStackClient:
 
 def get_client_from_request(request: Optional[Request]) -> AsyncLlamaStackClient:
     if request is not None:
-        # return get_client(request.headers.get("X-Forwarded-Access-Token"))
-        return get_client(request.headers.get("X-Auth-Request-Access-Token"))
+        return get_client(request.headers.get("X-Forwarded-Access-Token"))
     return get_client()
 
 
