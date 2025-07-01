@@ -11,7 +11,7 @@ async def make_authorized_request(
     url: str,
     token: str,
     headers=dict[str, str],
-):
+) -> httpx.Response | None:
     """
     Makes an HTTP request with an Authorization header.
 
@@ -41,8 +41,6 @@ async def make_authorized_request(
                 headers=headers,
                 timeout=10.0,  # Add a reasonable timeout
             )
-            if response.status_code != 200:
-                raise ValueError(f"Authentication failed: {response.status_code}")
             return response
     except httpx.TimeoutException:
         raise
@@ -79,7 +77,10 @@ async def validate(auth_request: AuthRequest):
     )
 
     if response is None or response.status_code != 200:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Authentication failed: {response.status_code}",
+        )
 
     return AuthResponse(principal="test", message="Authentication successful")
 
