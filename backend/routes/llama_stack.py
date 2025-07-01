@@ -96,7 +96,7 @@ async def get_llms(request: Request):
     try:
         log.info(f"Attempting to fetch models from LlamaStack at {client.base_url}")
         try:
-            models = client.models.list()
+            models = await client.models.list()
             log.info(f"Received response from LlamaStack: {models}")
         except Exception as client_error:
             log.error(f"Error calling LlamaStack API: {str(client_error)}")
