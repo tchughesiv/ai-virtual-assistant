@@ -84,6 +84,9 @@ def validate(auth_request: AuthRequest):
         HTTPException: 403 if the user is not found
     """
 
+    for key, value in auth_request.request.headers.items():
+        print(f"{key}: {value}")
+
     response = make_authorized_request(
         url="http://localhost:8887/validate-token",
         token=auth_request.api_key,
@@ -92,8 +95,5 @@ def validate(auth_request: AuthRequest):
 
     if response is None or response.status_code != 200:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
-
-    for key, value in response.headers.items():
-        print(f"{key}: {value}")
 
     return AuthResponse(principal="test", message="Authentication successful")
