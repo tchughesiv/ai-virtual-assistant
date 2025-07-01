@@ -57,7 +57,8 @@ spec:
             - -pass-basic-auth=false
             - -pass-user-headers=true
             - -pass-access-token=true
-            - -openshift-delegate-urls={"/validate-token":{"resource":"namespaces","verb":"get"}}
+            - -set-xauthrequest=true
+            - -openshift-delegate-urls={"/validate-token":{}}
             - -tls-cert=/etc/tls/private/tls.crt
             - -tls-key=/etc/tls/private/tls.key
             - -cookie-secret-file=/etc/proxy/secrets/session_secret
@@ -158,3 +159,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+#            - -openshift-delegate-urls={"/validate-token":{"resource":"namespaces","verb":"get"}}
