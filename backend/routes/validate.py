@@ -10,8 +10,8 @@ router = APIRouter(prefix="/validate", tags=["validate"])
 
 
 def make_authorized_request(
-    url,
-    token,
+    url: str,
+    token: str,
     method="GET",
     data=None,
     json=None,
@@ -44,8 +44,8 @@ def make_authorized_request(
         "Authorization": auth_header_value,
     }
 
-    if headers:
-        default_headers.setdefault(headers)
+    # if headers:
+    #    default_headers.update(headers)
 
     for key, value in default_headers.items():
         print(f"{key}: {value}")
