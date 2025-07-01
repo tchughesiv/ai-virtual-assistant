@@ -35,17 +35,10 @@ def make_authorized_request(
     Returns:
         requests.Response: The response object from the request.
     """
-    if not token.startswith("Bearer "):
-        auth_header_value = f"Bearer {token}"
-    else:
-        auth_header_value = token
+    default_headers = token_to_auth_header(token)
 
-    default_headers = {
-        "Authorization": auth_header_value,
-    }
-
-    # if headers:
-    #    default_headers.update(headers)
+    if headers:
+        default_headers.update(headers)
 
     for key, value in default_headers.items():
         print(f"{key}: {value}")
@@ -105,3 +98,12 @@ def validate(auth_request: AuthRequest):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
 
     return AuthResponse(principal="test", message="Authentication successful")
+
+
+def token_to_auth_header(token: str) -> dict[str, str]:
+    if not token.startswith("Bearer "):
+        auth_header_value = f"Bearer {token}"
+    else:
+        auth_header_value = token
+
+    return {"Authorization": auth_header_value}
