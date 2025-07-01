@@ -1,7 +1,5 @@
 """ """
 
-from typing import Optional
-
 import requests
 from fastapi import APIRouter, HTTPException, status
 from llama_stack.distribution.server.auth_providers import AuthRequest, AuthResponse
@@ -15,8 +13,7 @@ def make_authorized_request(
     method="GET",
     data=None,
     json=None,
-    headers=Optional[dict[str, str]],
-    **kwargs,
+    headers=dict[str, str],
 ):
     """
     Makes an HTTP request with an Authorization header.
@@ -30,15 +27,12 @@ def make_authorized_request(
         data (dict or str): Data to send in the request body for POST/PUT.
         json (dict): JSON data to send in the request body for POST/PUT.
         headers (dict): Optional dictionary of additional headers.
-        **kwargs: Additional keyword arguments to pass to requests.request().
 
     Returns:
         requests.Response: The response object from the request.
     """
     default_headers = token_to_auth_header(token)
-
-    if headers:
-        default_headers.update(headers)
+    headers.update(default_headers)
 
     for key, value in default_headers.items():
         print(f"{key}: {value}")
@@ -47,10 +41,9 @@ def make_authorized_request(
         response = requests.request(
             method=method,
             url=url,
-            headers=default_headers,
+            headers=headers,
             data=data,
             json=json,
-            **kwargs,
         )
         response.raise_for_status()
         return response
