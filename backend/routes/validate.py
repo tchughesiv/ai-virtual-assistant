@@ -1,6 +1,6 @@
 """ """
 
-import requests
+import httpx
 from fastapi import APIRouter, HTTPException, status
 from llama_stack.distribution.server.auth_providers import AuthRequest, AuthResponse
 
@@ -10,9 +10,6 @@ router = APIRouter(prefix="/validate", tags=["validate"])
 async def make_authorized_request(
     url: str,
     token: str,
-    method="GET",
-    data=None,
-    json=None,
     headers=dict[str, str],
 ):
     """
@@ -34,31 +31,25 @@ async def make_authorized_request(
     default_headers = token_to_auth_header(token)
     headers.update(default_headers)
 
-    for key, value in default_headers.items():
+    for key, value in headers.items():
         print(f"{key}: {value}")
 
     try:
-        response = requests.request(
-            method=method,
-            url=url,
-            headers=headers,
-            data=data,
-            json=json,
-        )
-        response.raise_for_status()
-        return response
-    except requests.exceptions.HTTPError as e:
-        print(f"HTTP Error: {e}")
-        return None
-    except requests.exceptions.ConnectionError as e:
-        print(f"Connection Error: {e}")
-        return None
-    except requests.exceptions.Timeout as e:
-        print(f"Timeout Error: {e}")
-        return None
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
-        return None
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                url=url,
+                headers=headers,
+                timeout=10.0,  # Add a reasonable timeout
+            )
+            if response.status_code != 200:
+                raise ValueError(f"Authentication failed: {response.status_code}")
+            return response
+    except httpx.TimeoutException:
+        raise
+    except ValueError:
+        raise
+    except Exception as e:
+        raise ValueError("Authentication service error") from e
 
 
 @router.post("", response_model=AuthResponse)

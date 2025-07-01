@@ -3,7 +3,7 @@ from typing import Optional
 
 from dotenv import load_dotenv
 from fastapi import Request
-from llama_stack_client import LlamaStackClient
+from llama_stack_client import AsyncLlamaStackClient
 
 from ..routes.validate import token_to_auth_header
 from ..virtual_agents.agent_resource import EnhancedAgentResource
@@ -36,8 +36,8 @@ LLAMASTACK_URL = os.getenv("LLAMASTACK_URL", "http://localhost:8321")
 #        return None
 
 
-def get_client(api_key: Optional[str]) -> LlamaStackClient:
-    client = LlamaStackClient(
+def get_client(api_key: Optional[str]) -> AsyncLlamaStackClient:
+    client = AsyncLlamaStackClient(
         base_url=LLAMASTACK_URL,
         default_headers=token_to_auth_header(api_key),
     )
@@ -47,7 +47,7 @@ def get_client(api_key: Optional[str]) -> LlamaStackClient:
     return client
 
 
-def get_client_from_request(request: Optional[Request]) -> LlamaStackClient:
+def get_client_from_request(request: Optional[Request]) -> AsyncLlamaStackClient:
     if request is not None:
         return get_client(request.headers.get("X-Forwarded-Access-Token"))
     return get_client()
