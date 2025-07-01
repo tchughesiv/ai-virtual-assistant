@@ -248,7 +248,7 @@ async def sync_knowledge_bases(db: AsyncSession):
         logger.info("Starting knowledge base sync")
         logger.debug("Fetching vector databases from LlamaStack")
         try:
-            response = sync_client.vector_dbs.list()
+            response = await sync_client.vector_dbs.list()
 
             if isinstance(response, list):
                 vector_dbs = [item.__dict__ for item in response]
