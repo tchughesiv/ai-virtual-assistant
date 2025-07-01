@@ -38,7 +38,8 @@ LLAMASTACK_URL = os.getenv("LLAMASTACK_URL", "http://localhost:8321")
 
 def get_client(api_key: Optional[str]) -> LlamaStackClient:
     client = LlamaStackClient(
-        base_url=LLAMASTACK_URL, default_headers=token_to_auth_header(api_key)
+        base_url=LLAMASTACK_URL,
+        default_headers=token_to_auth_header(api_key),
     )
     if api_key is not None:
         client.api_key = api_key
@@ -51,8 +52,5 @@ def get_client_from_request(request: Optional[Request]) -> LlamaStackClient:
         return get_client(request.headers.get("X-Forwarded-Access-Token"))
     return get_client()
 
-
-# curl http://localhost:8321/v1/models \
-#   -H "Authorization: Bearer sha256~IdijBSbm0v5eZf_9boG5WexDu8LdajWN0puEcyeupLc"
 
 sync_client = get_client(os.getenv("TOKEN"))
