@@ -43,14 +43,13 @@ def make_authorized_request(
     default_headers = {
         "Authorization": auth_header_value,
     }
-
     if headers:
         default_headers.update(headers)
 
-    for key, value in default_headers.items():
-        print(f"{key}: {value}")
-
     try:
+        for key, value in default_headers.items():
+            print(f"{key}: {value}")
+
         response = requests.request(
             method=method,
             url=url,
