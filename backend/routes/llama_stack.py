@@ -93,6 +93,9 @@ async def get_llms(request: Request):
         HTTPException: 502 if LlamaStack is unreachable, 500 for other errors
     """
     client = get_client_from_request(request)
+    print(client.api_key)
+    for h, v in client.default_headers.items():
+        print(f"{h}: {v}")
     try:
         log.info(f"Attempting to fetch models from LlamaStack at {client.base_url}")
         try:
