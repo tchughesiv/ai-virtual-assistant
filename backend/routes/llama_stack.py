@@ -30,7 +30,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from backend.database import get_db
 
 from .. import models
-from ..api.llamastack import get_client, get_client_from_request
+from ..api.llamastack import get_client, sync_client
 from .chat import Chat
 from .virtual_assistants import read_virtual_assistant
 
@@ -92,7 +92,7 @@ async def get_llms(request: Request):
     Raises:
         HTTPException: 502 if LlamaStack is unreachable, 500 for other errors
     """
-    client = get_client_from_request(request)
+    client = sync_client
     print(f"api_key = {client.api_key}")
     for h, v in client.default_headers.items():
         print(f"{h}: {v}")
