@@ -47,7 +47,7 @@ def make_authorized_request(
     if headers:
         default_headers.update(headers)
 
-    for key, value in headers.items():
+    for key, value in default_headers.items():
         print(f"{key}: {value}")
 
     try:
