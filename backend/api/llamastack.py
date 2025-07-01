@@ -54,3 +54,7 @@ def get_client_from_request(request: Optional[Request]) -> AsyncLlamaStackClient
 
 
 sync_client = get_client(os.getenv("TOKEN"))
+# curl localhost:8887/validate-token \
+#   -H "Authorization: Bearer sha256~IdijBSbm0v5eZf_9boG5WexDu8LdajWN0puEcyeupLc"
+# curl localhost:8887/validate-token -H \
+#   "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"
