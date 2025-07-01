@@ -88,11 +88,11 @@ def validate(auth_request: AuthRequest):
         url="http://localhost:8887/validate-token",
         token=auth_request.api_key,
     )
-    if auth_request.request.headers.__len__ > 0:
+    if auth_request.request.headers:
         response.headers = auth_request.request.headers
 
     if response is None or response.status_code != 200:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Forbidden")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
 
     for key, value in response.headers.items():
         print(f"{key}: {value}")
