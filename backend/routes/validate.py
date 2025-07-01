@@ -1,5 +1,7 @@
 """ """
 
+from typing import Optional
+
 import requests
 from fastapi import APIRouter, HTTPException, status
 from llama_stack.distribution.server.auth_providers import AuthRequest, AuthResponse
@@ -8,7 +10,13 @@ router = APIRouter(prefix="/validate", tags=["validate"])
 
 
 def make_authorized_request(
-    url, token, method="GET", data=None, json=None, headers=None, **kwargs
+    url,
+    token,
+    method="GET",
+    data=None,
+    json=None,
+    headers=Optional[dict[str, str]],
+    **kwargs,
 ):
     """
     Makes an HTTP request with an Authorization header.
@@ -38,6 +46,9 @@ def make_authorized_request(
 
     if headers:
         default_headers.update(headers)
+
+    for key, value in headers.items():
+        print(f"{key}: {value}")
 
     try:
         response = requests.request(
@@ -83,9 +94,6 @@ def validate(auth_request: AuthRequest):
         HTTPException: 401 if the user is not authorized
         HTTPException: 403 if the user is not found
     """
-
-    for key, value in auth_request.request.headers.items():
-        print(f"{key}: {value}")
 
     response = make_authorized_request(
         url="http://localhost:8887/validate-token",
