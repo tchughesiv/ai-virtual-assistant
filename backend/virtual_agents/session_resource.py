@@ -7,13 +7,13 @@ from typing import List
 import httpx
 from fastapi import HTTPException
 from llama_stack_client._types import NOT_GIVEN, Body, Headers, NotGiven, Query
-from llama_stack_client.resources.agents.session import AsyncSessionResource
+from llama_stack_client.resources.agents.session import SessionResource
 
 log = logging.getLogger(__name__)
 
 
-class EnhancedSessionResource(AsyncSessionResource):
-    async def list(
+class EnhancedSessionResource(SessionResource):
+    def list(
         self,
         agent_id: str,
         *,
@@ -36,9 +36,9 @@ class EnhancedSessionResource(AsyncSessionResource):
             import httpx
 
             # Use direct HTTP request to avoid client parsing issues
-            async with httpx.AsyncClient() as http_client:
+            with httpx.AsyncClient() as http_client:
                 llamastack_url = os.getenv("LLAMASTACK_URL", "http://localhost:8321")
-                response = await http_client.get(
+                response = http_client.get(
                     f"{llamastack_url}/v1/agents/{agent_id}/sessions",
                     headers=self._client.default_headers,
                     timeout=30.0,
@@ -66,7 +66,7 @@ class EnhancedSessionResource(AsyncSessionResource):
                 status_code=500, detail=f"Failed to fetch sessions: {str(e)}"
             )
 
-    async def delete(
+    def delete(
         self,
         session_id: str,
         agent_id: str,
@@ -95,9 +95,9 @@ class EnhancedSessionResource(AsyncSessionResource):
             import httpx
 
             # Use direct HTTP request to delete session
-            async with httpx.AsyncClient() as http_client:
+            with httpx.AsyncClient() as http_client:
                 llamastack_url = os.getenv("LLAMASTACK_URL", "http://localhost:8321")
-                response = await http_client.delete(
+                response = http_client.delete(
                     f"{llamastack_url}/v1/agents/{agent_id}/session/{session_id}",
                     headers=self._client.default_headers,
                     timeout=30.0,
