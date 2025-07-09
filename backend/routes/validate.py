@@ -21,7 +21,7 @@ from ..routes.users import get_user_from_headers
 router = APIRouter(prefix="/validate", tags=["validate"])
 
 
-async def make_authorized_request(
+def make_authorized_request(
     url: str,
     auth_request: AuthRequest,
 ) -> httpx.Response | None:
@@ -30,8 +30,8 @@ async def make_authorized_request(
     headers.update(user_headers)
 
     try:
-        async with httpx.AsyncClient() as client:
-            response = await client.get(
+        with httpx.Client() as client:
+            response = client.get(
                 url=url,
                 headers=headers,
                 timeout=10.0,  # Add a reasonable timeout
@@ -65,7 +65,7 @@ async def validate(auth_request: AuthRequest, db: AsyncSession = Depends(get_db)
         HTTPException: 403 if the user is not found
     """
 
-    response = await make_authorized_request(
+    response = make_authorized_request(
         "http://localhost:8887/validate-token",
         auth_request,
     )
