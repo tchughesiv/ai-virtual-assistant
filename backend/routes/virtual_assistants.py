@@ -44,7 +44,9 @@ def get_strategy(temperature, top_p):
     response_model=schemas.VirtualAssistantRead,
     status_code=status.HTTP_201_CREATED,
 )
-def create_virtual_assistant(va: schemas.VirtualAssistantCreate, request: Request):
+async def create_virtual_assistant(
+    va: schemas.VirtualAssistantCreate, request: Request
+):
     """
     Create a new virtual assistant agent in LlamaStack.
 
@@ -156,7 +158,7 @@ def to_va_response(agent: VirtualAgent):
 
 
 @router.get("/", response_model=List[schemas.VirtualAssistantRead])
-def get_virtual_assistants(request: Request):
+async def get_virtual_assistants(request: Request):
     """
     Retrieve all virtual assistants from LlamaStack.
 
@@ -173,7 +175,7 @@ def get_virtual_assistants(request: Request):
 
 
 @router.get("/{va_id}", response_model=schemas.VirtualAssistantRead)
-def read_virtual_assistant(va_id: str, request: Request):
+async def read_virtual_assistant(va_id: str, request: Request):
     """
     Retrieve a specific virtual assistant by ID.
 
@@ -192,12 +194,12 @@ def read_virtual_assistant(va_id: str, request: Request):
 
 
 # @router.put("/{va_id}", response_model=schemas.VirtualAssistantRead)
-# def update_virtual_assistant(va_id: str):
+# async def update_virtual_assistant(va_id: str):
 #     pass
 
 
 @router.delete("/{va_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_virtual_assistant(va_id: str, request: Request):
+async def delete_virtual_assistant(va_id: str, request: Request):
     """
     Delete a virtual assistant from LlamaStack.
 
