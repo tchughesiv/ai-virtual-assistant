@@ -40,7 +40,7 @@ class Chat:
     def _get_client(self):
         return get_client_from_request(self.request)
 
-    async def _get_agent_config(self, agent_id: str):
+    def _get_agent_config(self, agent_id: str):
         """
         Retrieve agent configuration from LlamaStack.
 
@@ -51,13 +51,13 @@ class Chat:
             Agent configuration object or None if not found
         """
         try:
-            agent_config = await self._get_client().agents.retrieve(agent_id=agent_id)
+            agent_config = self._get_client().agents.retrieve(agent_id=agent_id)
             return agent_config
         except Exception as e:
             self.log.error(f"Error retrieving agent config for {agent_id}: {e}")
             return None
 
-    async def _get_tools_for_agent(self, agent_id: str):
+    def _get_tools_for_agent(self, agent_id: str):
         """
         Retrieve tools configuration for an agent from LlamaStack.
 
@@ -68,7 +68,7 @@ class Chat:
             List of tools available to the agent
         """
         try:
-            agent_config = await self._get_agent_config(agent_id)
+            agent_config = self._get_agent_config(agent_id)
             if (
                 agent_config
                 and hasattr(agent_config, "tool_config")
@@ -80,7 +80,7 @@ class Chat:
             self.log.error(f"Error retrieving tools for agent {agent_id}: {e}")
             return []
 
-    async def _get_model_for_agent(self, agent_id: str):
+    def _get_model_for_agent(self, agent_id: str):
         """
         Retrieve model configuration for an agent from LlamaStack.
 
@@ -91,11 +91,11 @@ class Chat:
             Model identifier string, defaults to llama-3.1-8b-instruct if not found
         """
         try:
-            agent_config = await self._get_agent_config(agent_id)
+            agent_config = self._get_agent_config(agent_id)
             if agent_config and hasattr(agent_config, "model"):
                 return agent_config.model
             # Fallback to default model if not found
-            models = await self._get_client().models.list()
+            models = self._get_client().models.list()
             model_list = [
                 model.identifier for model in models if model.api_model_type == "llm"
             ]
@@ -104,15 +104,15 @@ class Chat:
             self.log.error(f"Error retrieving model for agent {agent_id}: {e}")
             return "llama-3.1-8b-instruct"
 
-    async def _create_agent_with_existing_id(self, agent_id: str, session_id: str):
+    def _create_agent_with_existing_id(self, agent_id: str, session_id: str):
         """Create an agent instance using an existing agent_id from LlamaStack."""
         try:
-            agent_config = await self._get_agent_config(agent_id)
+            agent_config = self._get_agent_config(agent_id)
             if not agent_config:
                 raise Exception(f"Agent {agent_id} not found")
 
-            model = await self._get_model_for_agent(agent_id)
-            tools = await self._get_tools_for_agent(agent_id)
+            model = self._get_model_for_agent(agent_id)
+            tools = self._get_tools_for_agent(agent_id)
 
             # Determine agent type from config (default to REGULAR)
             agent_type = AgentType.REGULAR
@@ -149,7 +149,7 @@ class Chat:
             self.log.error(f"Error creating agent with ID {agent_id}: {e}")
             raise
 
-    async def _response_generator(
+    def _response_generator(
         self, turn_response, session_id: str, agent_type: AgentType
     ):
         if agent_type == AgentType.REACT:
@@ -503,7 +503,7 @@ class Chat:
                     }
                 )
 
-    async def stream(self, agent_id: str, session_id: str, prompt: str):
+    def stream(self, agent_id: str, session_id: str, prompt: str):
         """
         Stream chat response using LlamaStack as the single source of truth.
 
@@ -514,7 +514,7 @@ class Chat:
         """
         try:
             # Create agent instance using existing agent_id
-            agent = await self._create_agent_with_existing_id(agent_id, session_id)
+            agent = self._create_agent_with_existing_id(agent_id, session_id)
             self.log.info(f"Using agent: {agent_id} with session: {session_id}")
 
             # Get existing messages from the session
@@ -523,7 +523,7 @@ class Chat:
             messages = [{"role": "user", "content": prompt}]
 
             # Create turn with LlamaStack
-            turn_response = await agent.create_turn(
+            turn_response = agent.create_turn(
                 session_id=session_id,
                 messages=messages,
                 stream=True,
@@ -535,7 +535,7 @@ class Chat:
             agent_type = AgentType.REGULAR
 
             # Stream the response
-            await self._response_generator(turn_response, session_id, agent_type)
+            yield from self._response_generator(turn_response, session_id, agent_type)
 
         except Exception as e:
             self.log.error(
