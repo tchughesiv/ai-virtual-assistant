@@ -26,7 +26,7 @@ class LlamaStackSyncService:
             log.info(f"Syncing knowledge base creation to LlamaStack: {kb.name}")
 
             # Register the vector database in LlamaStack
-            await sync_client.vector_dbs.register(
+            sync_client.vector_dbs.register(
                 vector_db_id=kb.vector_db_name,
                 embedding_model=kb.embedding_model,
                 embedding_dimension=384,  # Default dimension
@@ -51,7 +51,7 @@ class LlamaStackSyncService:
 
             # Since LlamaStack doesn't have update, we re-register
             # This might overwrite existing data, but ensures consistency
-            await sync_client.vector_dbs.register(
+            sync_client.vector_dbs.register(
                 vector_db_id=kb.vector_db_name,
                 embedding_model=kb.embedding_model,
                 embedding_dimension=384,
@@ -139,13 +139,13 @@ class LlamaStackSyncService:
             log.info("Validating sync status with LlamaStack")
 
             # Get LlamaStack vector databases
-            llamastack_vdbs = await sync_client.vector_dbs.list()
+            llamastack_vdbs = sync_client.vector_dbs.list()
             llamastack_vdb_names = {vdb.identifier for vdb in llamastack_vdbs}
 
             # Get local knowledge bases
             from sqlalchemy import select
 
-            result = await db.execute(select(models.KnowledgeBase))
+            result = db.execute(select(models.KnowledgeBase))
             local_kbs = result.scalars().all()
             local_vdb_names = {kb.vector_db_name for kb in local_kbs}
 
