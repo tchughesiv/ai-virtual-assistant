@@ -3,9 +3,10 @@ import json
 import os
 
 from fastapi import Request
+from llama_stack_client.lib.agents.agent import AsyncAgent
 from llama_stack_client.lib.agents.react.tool_parser import ReActOutput
 
-from ..agents import ExistingAgent, ExistingReActAgent
+from ..agents import ExistingReActAgent
 from ..api.llamastack import get_client_from_request
 from ..utils.logging_config import get_logger
 
@@ -131,9 +132,9 @@ class Chat:
                     sampling_params={"strategy": {"type": "greedy"}, "max_tokens": 512},
                 )
             else:
-                return ExistingAgent(
+                return AsyncAgent(
                     self._get_client(),
-                    agent_id=agent_id,
+                    # agent_id=agent_id,
                     model=model,
                     instructions=(
                         "You are a helpful assistant. When you use a tool "
@@ -528,6 +529,8 @@ class Chat:
                 messages=messages,
                 stream=True,
             )
+
+            print(turn_response)
 
             # Determine agent type (defaulting to REGULAR for now)
             agent_type = AgentType.REGULAR

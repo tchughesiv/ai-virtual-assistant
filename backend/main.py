@@ -48,12 +48,20 @@ setup_logging(level="INFO")
 logger = get_logger(__name__)
 
 
+def get_incluster_namespace():
+    try:
+        with open("/var/run/secrets/kubernetes.io/serviceaccount/namespace") as file:
+            return file.read().strip()
+    except Exception:
+        return "default"
+
+
 async def after_serving_starts():
     await asyncio.sleep(1)  # Small delay to ensure server is serving
     print("🚀 Post-startup task: FastAPI is now serving!")
 
     service_name = "ai-virtual-assistant-authenticated"
-    namespace = "tommy"
+    namespace = get_incluster_namespace()
     if wait_for_service_ready(service_name, namespace):
         print("Service is ready, proceeding with operations.")
         try:

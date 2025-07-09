@@ -1,7 +1,5 @@
 """ """
 
-import os
-
 import httpx
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from llama_stack.distribution.server.auth_providers import (
@@ -12,7 +10,11 @@ from llama_stack.distribution.server.auth_providers import (
 )
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..api.llamastack import get_user_headers_from_request, token_to_auth_header
+from ..api.llamastack import (
+    get_sa_token,
+    get_user_headers_from_request,
+    token_to_auth_header,
+)
 from ..database import get_db
 from ..routes.users import get_user_from_headers
 
@@ -93,7 +95,7 @@ async def validate(auth_request: AuthRequest, db: AsyncSession = Depends(get_db)
 async def validate_test(request: Request) -> User:
     # Build the auth request model
     auth_request = AuthRequest(
-        api_key=os.getenv("TOKEN"),
+        api_key=get_sa_token(),
         request=AuthRequestContext(
             path="/",
             headers={
