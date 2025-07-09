@@ -36,7 +36,7 @@ class EnhancedSessionResource(SessionResource):
             import httpx
 
             # Use direct HTTP request to avoid client parsing issues
-            with httpx.AsyncClient() as http_client:
+            with httpx.Client() as http_client:
                 llamastack_url = os.getenv("LLAMASTACK_URL", "http://localhost:8321")
                 response = http_client.get(
                     f"{llamastack_url}/v1/agents/{agent_id}/sessions",
@@ -95,7 +95,7 @@ class EnhancedSessionResource(SessionResource):
             import httpx
 
             # Use direct HTTP request to delete session
-            with httpx.AsyncClient() as http_client:
+            with httpx.Client() as http_client:
                 llamastack_url = os.getenv("LLAMASTACK_URL", "http://localhost:8321")
                 response = http_client.delete(
                     f"{llamastack_url}/v1/agents/{agent_id}/session/{session_id}",
