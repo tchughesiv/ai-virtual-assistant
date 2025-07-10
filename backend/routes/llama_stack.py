@@ -442,13 +442,18 @@ async def chat(
                     last_message = chatRequest.messages[
                         -1
                     ]  # Get last message instead of popping
+
                     # Stream response using new stateless interface
-                    async for chunk in chat.stream(
-                        agent_id, session_id, last_message.content
-                    ):
-                        # Send the chunk directly since it's already
-                        # properly formatted JSON
-                        yield f"data: {chunk}\n\n"
+                    async def chat_stream():
+                        async for chunk in chat.stream(
+                            agent_id, session_id, last_message.content
+                        ):
+                            # Send the chunk directly since it's already
+                            # properly formatted JSON
+                            yield f"data: {chunk}\n\n"
+
+                    async for event in chat_stream():
+                        print(event.strip())
 
                 # End of stream
                 yield "data: [DONE]\n\n"
