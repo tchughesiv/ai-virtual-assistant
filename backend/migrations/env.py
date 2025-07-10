@@ -62,20 +62,20 @@ def seed_admin_users():
 
 
 def seed_user(username: str, email: str):
-        session = Session(bind=context.get_bind())
-        if session.query(User).filter(User.username == username).count() > 0:
-            print("'" + username + "' user already exists")
-        elif session.query(User).filter(User.email == email).count() > 0:
-            print("user with '" + email + "' email address already exists")
-        else:
-            user = User(
-                username=username,
-                email=email,
-                role=RoleEnum.admin,
-            )
-            session.add(user)
-            session.commit()
-            print(f"{user.role} '" + username + "' successfully seeded")
+    session = Session(bind=context.get_bind())
+    if session.query(User).filter(User.username == username).count() > 0:
+        print("'" + username + "' user already exists")
+    elif session.query(User).filter(User.email == email).count() > 0:
+        print("user with '" + email + "' email address already exists")
+    else:
+        user = User(
+            username=username,
+            email=email,
+            role=RoleEnum.admin,
+        )
+        session.add(user)
+        session.commit()
+        print(f"{user.role} '" + username + "' successfully seeded")
 
 
 def run_migrations_offline() -> None:
