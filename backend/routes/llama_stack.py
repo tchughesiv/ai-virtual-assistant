@@ -443,7 +443,7 @@ async def chat(
                         -1
                     ]  # Get last message instead of popping
 
-                    async for chunk in await chat.stream(
+                    async for chunk in chat.stream(
                         agent_id, session_id, last_message.content
                     ):
                         # Send the chunk directly since it's already
@@ -470,9 +470,7 @@ async def chat(
                 print(f'data: {{"type":"error","content":"Error: {str(e)}"}}\n\n')
                 # yield f'data: {{"type":"error","content":"Error: {str(e)}"}}\n\n'
 
-        return StreamingResponse(
-            await generate_response(), media_type="text/event-stream"
-        )
+        return StreamingResponse(generate_response(), media_type="text/event-stream")
 
     except Exception as e:
         log.error(f"Error in chat endpoint: {str(e)}")
