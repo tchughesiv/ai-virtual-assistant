@@ -435,24 +435,17 @@ async def chat(
         # Create stateless Chat instance (no longer needs assistant or session_state)
         chat = Chat(log, request)
 
-        async def generate_response():
+        def generate_response():
             try:
                 # Get the last user message
                 if len(chatRequest.messages) > 0:
-                    last_message = chatRequest.messages[
-                        -1
-                    ]  # Get last message instead of popping
+                    last_message = chatRequest.messages[-1]
 
-                    async for chunk in chat.stream(
+                    for chunk in chat.stream(
                         agent_id, session_id, last_message.content
                     ):
-                        # Send the chunk directly since it's already
-                        # properly formatted JSON
-                        print(f"data: {chunk}\n\n")
                         yield f"data: {chunk}\n\n"
 
-                # End of stream
-                print("data: [DONE]\n\n")
                 yield "data: [DONE]\n\n"
 
                 # Save session metadata to database

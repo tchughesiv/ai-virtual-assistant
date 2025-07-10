@@ -1,3 +1,4 @@
+import asyncio
 import enum
 import json
 import os
@@ -504,7 +505,7 @@ class Chat:
                     }
                 )
 
-    async def stream(self, agent_id: str, session_id: str, prompt: str):
+    def stream(self, agent_id: str, session_id: str, prompt: str):
         """
         Stream chat response using LlamaStack as the single source of truth.
 
@@ -515,7 +516,9 @@ class Chat:
         """
         try:
             # Create agent instance using existing agent_id
-            agent = await self._create_agent_with_existing_id(agent_id, session_id)
+            agent = asyncio.run(
+                self._create_agent_with_existing_id(agent_id, session_id)
+            )
             self.log.info(f"Using agent: {agent_id} with session: {session_id}")
 
             # Get existing messages from the session
@@ -524,10 +527,12 @@ class Chat:
             messages = [{"role": "user", "content": prompt}]
 
             # Create turn with LlamaStack
-            turn_response = await agent.create_turn(
-                session_id=session_id,
-                messages=messages,
-                stream=True,
+            turn_response = asyncio.run(
+                agent.create_turn(
+                    session_id=session_id,
+                    messages=messages,
+                    stream=True,
+                )
             )
 
             print(turn_response)
