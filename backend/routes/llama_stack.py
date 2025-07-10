@@ -443,22 +443,17 @@ async def chat(
                         -1
                     ]  # Get last message instead of popping
 
-                    # Stream response using new stateless interface
-                    async def chat_stream():
-                        async for chunk in await chat.stream(
-                            agent_id, session_id, last_message.content
-                        ):
-                            # Send the chunk directly since it's already
-                            # properly formatted JSON
-                            print(f"data: {chunk}\n\n")
-                            yield f"data: {chunk}\n\n"
-
-                    async for event in await chat_stream():
-                        print(event.strip())
+                    async for chunk in await chat.stream(
+                        agent_id, session_id, last_message.content
+                    ):
+                        # Send the chunk directly since it's already
+                        # properly formatted JSON
+                        print(f"data: {chunk}\n\n")
+                        yield f"data: {chunk}\n\n"
 
                 # End of stream
                 print("data: [DONE]\n\n")
-                # yield "data: [DONE]\n\n"
+                yield "data: [DONE]\n\n"
 
                 # Save session metadata to database
                 background_task.add_task(
