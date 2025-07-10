@@ -67,7 +67,7 @@ def seed_user(username: str, email: str, role: RoleEnum):
         )
         session.add(user)
         session.commit()
-        print(f"{str(role)} '" + username + "' successfully seeded")
+        print(f"'" + username + "' successfully seeded as a "+{str(role)})
 
 
 def seed_admin_users():
