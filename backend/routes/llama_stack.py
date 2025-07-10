@@ -451,7 +451,7 @@ async def chat(
                             # Send the chunk directly since it's already
                             # properly formatted JSON
                             print(f"data: {chunk}\n\n")
-                            # yield f"data: {chunk}\n\n"
+                            yield f"data: {chunk}\n\n"
 
                     async for event in await chat_stream():
                         print(event.strip())
