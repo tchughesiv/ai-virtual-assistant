@@ -53,7 +53,7 @@ target_metadata = Base.metadata
 # ... etc.
 
 
-def seed_admin_user():
+def seed_admin_users():
     admin_username = os.getenv("ADMIN_USERNAME")
     if admin_username is not None:
         admin_email = os.getenv("ADMIN_EMAIL", "admin@change.me")
@@ -70,6 +70,11 @@ def seed_admin_user():
                 role=RoleEnum.admin,
             )
             session.add(admin_user)
+            admin_user = User(
+                username="ingestion-pipeline",
+                email="ingestion-pipeline@change.me",
+                role=RoleEnum.admin,
+            )
             session.commit()
             print("admin user '" + admin_username + "' successfully seeded")
 
@@ -96,7 +101,7 @@ def run_migrations_offline() -> None:
 
     with context.begin_transaction():
         context.run_migrations()
-        seed_admin_user()
+        seed_admin_users()
 
 
 def run_migrations_online() -> None:
@@ -117,7 +122,7 @@ def run_migrations_online() -> None:
 
         with context.begin_transaction():
             context.run_migrations()
-            seed_admin_user()
+            seed_admin_users()
 
 
 if context.is_offline_mode():
