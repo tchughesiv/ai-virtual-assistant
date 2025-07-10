@@ -70,11 +70,12 @@ def seed_admin_users():
                 role=RoleEnum.admin,
             )
             session.add(admin_user)
-            admin_user = User(
+            ingestion_pipeline_user = User(
                 username="ingestion-pipeline",
                 email="ingestion-pipeline@change.me",
                 role=RoleEnum.admin,
             )
+            session.add(ingestion_pipeline_user)
             session.commit()
             print("admin user '" + admin_username + "' successfully seeded")
 
