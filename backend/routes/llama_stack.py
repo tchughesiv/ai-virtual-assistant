@@ -450,12 +450,14 @@ async def chat(
                         ):
                             # Send the chunk directly since it's already
                             # properly formatted JSON
+                            print(f"data: {chunk}\n\n")
                             yield f"data: {chunk}\n\n"
 
                     async for event in chat_stream():
                         print(event.strip())
 
                 # End of stream
+                print("data: [DONE]\n\n")
                 yield "data: [DONE]\n\n"
 
                 # Save session metadata to database
