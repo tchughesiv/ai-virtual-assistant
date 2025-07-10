@@ -54,30 +54,28 @@ target_metadata = Base.metadata
 
 
 def seed_admin_users():
+    seed_user("ingestion-pipeline", "ingestion-pipeline@change.me")
     admin_username = os.getenv("ADMIN_USERNAME")
     if admin_username is not None:
         admin_email = os.getenv("ADMIN_EMAIL", "admin@change.me")
+        seed_user(admin_username, admin_email)
 
+
+def seed_user(username: str, email: str):
         session = Session(bind=context.get_bind())
-        if session.query(User).filter(User.username == admin_username).count() > 0:
-            print("'" + admin_username + "' user already exists")
-        elif session.query(User).filter(User.email == admin_email).count() > 0:
-            print("user with '" + admin_email + "' email address already exists")
+        if session.query(User).filter(User.username == username).count() > 0:
+            print("'" + username + "' user already exists")
+        elif session.query(User).filter(User.email == email).count() > 0:
+            print("user with '" + email + "' email address already exists")
         else:
-            admin_user = User(
-                username=admin_username,
-                email=admin_email,
+            user = User(
+                username=username,
+                email=email,
                 role=RoleEnum.admin,
             )
-            session.add(admin_user)
-            ingestion_pipeline_user = User(
-                username="ingestion-pipeline",
-                email="ingestion-pipeline@change.me",
-                role=RoleEnum.admin,
-            )
-            session.add(ingestion_pipeline_user)
+            session.add(user)
             session.commit()
-            print("admin user '" + admin_username + "' successfully seeded")
+            print(f"{user.role} '" + username + "' successfully seeded")
 
 
 def run_migrations_offline() -> None:
