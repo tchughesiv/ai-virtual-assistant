@@ -150,7 +150,7 @@ class Chat:
             self.log.error(f"Error creating agent with ID {agent_id}: {e}")
             raise
 
-    async def _response_generator(
+    def _response_generator(
         self, turn_response, session_id: str, agent_type: AgentType
     ):
         if agent_type == AgentType.REACT:
@@ -536,7 +536,7 @@ class Chat:
             agent_type = AgentType.REGULAR
 
             # Stream the response
-            await self._response_generator(turn_response, session_id, agent_type)
+            self._response_generator(turn_response, session_id, agent_type)
 
         except Exception as e:
             self.log.error(
