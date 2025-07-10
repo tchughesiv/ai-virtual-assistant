@@ -53,14 +53,6 @@ target_metadata = Base.metadata
 # ... etc.
 
 
-def seed_admin_users():
-    seed_user("ingestion-pipeline", "ingestion-pipeline@change.me")
-    admin_username = os.getenv("ADMIN_USERNAME")
-    if admin_username is not None:
-        admin_email = os.getenv("ADMIN_EMAIL", "admin@change.me")
-        seed_user(admin_username, admin_email)
-
-
 def seed_user(username: str, email: str):
     session = Session(bind=context.get_bind())
     if session.query(User).filter(User.username == username).count() > 0:
@@ -76,6 +68,14 @@ def seed_user(username: str, email: str):
         session.add(user)
         session.commit()
         print(f"{user.role} '" + username + "' successfully seeded")
+
+
+def seed_admin_users():
+    seed_user("ingestion-pipeline", "ingestion-pipeline@change.me")
+    admin_username = os.getenv("ADMIN_USERNAME")
+    if admin_username is not None:
+        admin_email = os.getenv("ADMIN_EMAIL", "admin@change.me")
+        seed_user(admin_username, admin_email)
 
 
 def run_migrations_offline() -> None:
