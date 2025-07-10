@@ -515,27 +515,26 @@ class Chat:
             prompt: The user's message
         """
         try:
-            # Create agent instance using existing agent_id
-            agent = asyncio.run(
-                self._create_agent_with_existing_id(agent_id, session_id)
-            )
-            self.log.info(f"Using agent: {agent_id} with session: {session_id}")
 
-            # Get existing messages from the session
-            # Note: LlamaStack manages session state, so we don't need to
-            # maintain local state
-            messages = [{"role": "user", "content": prompt}]
+            async def test():
+                # Create agent instance using existing agent_id
+                agent = await self._create_agent_with_existing_id(agent_id, session_id)
+                self.log.info(f"Using agent: {agent_id} with session: {session_id}")
 
-            # Create turn with LlamaStack
-            turn_response = asyncio.run(
-                agent.create_turn(
+                # Get existing messages from the session
+                # Note: LlamaStack manages session state, so we don't need to
+                # maintain local state
+                messages = [{"role": "user", "content": prompt}]
+
+                # Create turn with LlamaStack
+                turn_response = await agent.create_turn(
                     session_id=session_id,
                     messages=messages,
                     stream=True,
                 )
-            )
+                return turn_response
 
-            print(turn_response)
+            turn_response = asyncio.run(test())
 
             # Determine agent type (defaulting to REGULAR for now)
             agent_type = AgentType.REGULAR
