@@ -445,7 +445,7 @@ async def chat(
 
                     # Stream response using new stateless interface
                     async def chat_stream():
-                        async for chunk in chat.stream(
+                        async for chunk in await chat.stream(
                             agent_id, session_id, last_message.content
                         ):
                             # Send the chunk directly since it's already
@@ -453,7 +453,7 @@ async def chat(
                             print(f"data: {chunk}\n\n")
                             # yield f"data: {chunk}\n\n"
 
-                    async for event in chat_stream():
+                    async for event in await chat_stream():
                         print(event.strip())
 
                 # End of stream
