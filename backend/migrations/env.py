@@ -67,15 +67,15 @@ def seed_user(username: str, email: str, role: RoleEnum):
         )
         session.add(user)
         session.commit()
-        print(f"{user.role} '" + username + "' successfully seeded")
+        print(f"{role} '" + username + "' successfully seeded")
 
 
 def seed_admin_users():
-    seed_user("ingestion-pipeline", "ingestion-pipeline@change.me",RoleEnum.admin)
+    seed_user("ingestion-pipeline", "ingestion-pipeline@change.me", RoleEnum.admin)
     admin_username = os.getenv("ADMIN_USERNAME")
     if admin_username is not None:
-        admin_email = os.getenv("ADMIN_EMAIL", "admin@change.me",RoleEnum.admin)
-        seed_user(admin_username, admin_email)
+        admin_email = os.getenv("ADMIN_EMAIL", "admin@change.me")
+        seed_user(admin_username, admin_email, RoleEnum.admin)
 
 
 def run_migrations_offline() -> None:
