@@ -53,7 +53,7 @@ target_metadata = Base.metadata
 # ... etc.
 
 
-def seed_user(username: str, email: str):
+def seed_user(username: str, email: str, role: RoleEnum):
     session = Session(bind=context.get_bind())
     if session.query(User).filter(User.username == username).count() > 0:
         print("'" + username + "' user already exists")
@@ -63,7 +63,7 @@ def seed_user(username: str, email: str):
         user = User(
             username=username,
             email=email,
-            role=RoleEnum.admin,
+            role=role,
         )
         session.add(user)
         session.commit()
@@ -71,10 +71,10 @@ def seed_user(username: str, email: str):
 
 
 def seed_admin_users():
-    seed_user("ingestion-pipeline", "ingestion-pipeline@change.me")
+    seed_user("ingestion-pipeline", "ingestion-pipeline@change.me",RoleEnum.admin)
     admin_username = os.getenv("ADMIN_USERNAME")
     if admin_username is not None:
-        admin_email = os.getenv("ADMIN_EMAIL", "admin@change.me")
+        admin_email = os.getenv("ADMIN_EMAIL", "admin@change.me",RoleEnum.admin)
         seed_user(admin_username, admin_email)
 
 
