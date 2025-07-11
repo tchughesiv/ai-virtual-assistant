@@ -19,7 +19,7 @@ like conversation history sidebars.
 
 import json
 import logging
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, AsyncIterable, Dict, List, Literal, Optional
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
 from fastapi.responses import StreamingResponse
@@ -435,19 +435,21 @@ async def chat(
         # Create stateless Chat instance (no longer needs assistant or session_state)
         chat = Chat(log, request)
 
+        async def async_process_data(data: AsyncIterable[str]):
+            async for item in data:
+                print(item)
+
+        async def generate_async_data(last_message_content: str):
+            async for chunk in chat.stream(agent_id, session_id, last_message_content):
+                yield f"data: {chunk}\n\n"
+
         async def generate_response():
             try:
                 # Get the last user message
                 if len(chatRequest.messages) > 0:
                     last_message = chatRequest.messages[-1]
+                    async_process_data(generate_async_data(last_message.content))
 
-                    async for chunk in chat.stream(
-                        agent_id, session_id, last_message.content
-                    ):
-                        print(f"data: {chunk}\n\n")
-                        yield f"data: {chunk}\n\n"
-
-                print("data: [DONE]\n\n")
                 yield "data: [DONE]\n\n"
 
                 # Save session metadata to database
@@ -463,6 +465,9 @@ async def chat(
             except Exception as e:
                 log.error(f"Error in stream: {str(e)}")
                 yield f'data: {{"type":"error","content":"Error: {str(e)}"}}\n\n'
+
+        async def main():
+            await async_process_data(generate_async_data())
 
         return StreamingResponse(
             generate_response(),
