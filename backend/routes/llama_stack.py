@@ -440,6 +440,7 @@ async def chat(
                 print(item)
 
         async def generate_async_data(last_message_content: str):
+            print(last_message_content)
             async for chunk in chat.stream(agent_id, session_id, last_message_content):
                 yield f"data: {chunk}\n\n"
 

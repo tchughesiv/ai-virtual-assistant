@@ -518,8 +518,6 @@ class Chat:
             agent = await self._create_agent_with_existing_id(agent_id, session_id)
 
             print(f"Using agent: {agent_id} with session: {session_id}")
-            print(prompt)
-
             self.log.info(f"Using agent: {agent_id} with session: {session_id}")
 
             # Get existing messages from the session
