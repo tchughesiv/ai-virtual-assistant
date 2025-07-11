@@ -441,7 +441,7 @@ async def chat(
                 if len(chatRequest.messages) > 0:
                     last_message = chatRequest.messages[-1]
 
-                    for chunk in await chat.stream(
+                    async for chunk in chat.stream(
                         agent_id, session_id, last_message.content
                     ):
                         # yield f"data: {chunk}\n\n"

@@ -517,6 +517,7 @@ class Chat:
         try:
             # Create agent instance using existing agent_id
             agent = await self._create_agent_with_existing_id(agent_id, session_id)
+            print("Agent ID = " + agent.agent_id)
             self.log.info(f"Using agent: {agent_id} with session: {session_id}")
 
             # Get existing messages from the session
