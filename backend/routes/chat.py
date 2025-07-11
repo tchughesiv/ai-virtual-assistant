@@ -4,8 +4,8 @@ import os
 from typing import AsyncIterator
 
 from fastapi import Request
-from llama_stack_client.lib.agents.agent import AgentConfig
 from llama_stack_client.lib.agents.react.tool_parser import ReActOutput
+from llama_stack_client.types.shared_params.agent_config import AgentConfig
 
 from ..agents import ExistingAsyncAgent, ExistingReActAgent
 from ..api.llamastack import get_client_from_request
