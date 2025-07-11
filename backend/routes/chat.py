@@ -4,6 +4,7 @@ import json
 import os
 
 from fastapi import Request
+from llama_stack_client import AgentEventLogger
 from llama_stack_client.lib.agents.agent import AsyncAgent
 from llama_stack_client.lib.agents.react.tool_parser import ReActOutput
 
@@ -540,6 +541,8 @@ class Chat:
             agent_type = AgentType.REGULAR
 
             # Stream the response
+            for event in AgentEventLogger().log(turn_response):
+                event.print()
             self._response_generator(turn_response, session_id, agent_type)
 
         except Exception as e:
