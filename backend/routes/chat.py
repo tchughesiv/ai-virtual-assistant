@@ -542,6 +542,7 @@ class Chat:
             agent_type = AgentType.REGULAR
             print(turn_response)
             print(agent.tools)
+            print(agent.agent_id)
             print(prompt)
 
             # async for event in AgentEventLogger().log(turn_response):
