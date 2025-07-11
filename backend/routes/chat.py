@@ -112,7 +112,6 @@ class Chat:
         try:
             print(agent_id)
             agent_config = await self._get_agent_config(agent_id)
-            print(agent_config)
             if not agent_config:
                 raise Exception(f"Agent {agent_id} not found")
 
@@ -542,7 +541,7 @@ class Chat:
             # Determine agent type (defaulting to REGULAR for now)
             agent_type = AgentType.REGULAR
             print(turn_response)
-            print(agent.agent_config)
+            print(agent.tools)
             print(prompt)
 
             # async for event in AgentEventLogger().log(turn_response):
