@@ -516,7 +516,10 @@ class Chat:
         try:
             # Create agent instance using existing agent_id
             agent = await self._create_agent_with_existing_id(agent_id, session_id)
+
             print(f"Using agent: {agent_id} with session: {session_id}")
+            print(prompt)
+
             self.log.info(f"Using agent: {agent_id} with session: {session_id}")
 
             # Get existing messages from the session
@@ -533,9 +536,10 @@ class Chat:
 
             # Determine agent type (defaulting to REGULAR for now)
             agent_type = AgentType.REGULAR
+            print(turn_response)
 
             # Stream the response
-            for event in AgentEventLogger().log(turn_response):
+            async for event in AgentEventLogger().log(turn_response):
                 event.print()
             self._response_generator(turn_response, session_id, agent_type)
 
