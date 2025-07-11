@@ -396,8 +396,6 @@ async def chat(
             - 400 if session ID is missing
             - 500 for internal server errors during chat processing
     """
-    print(chatRequest.messages)
-
     client = get_client_from_request(request)
     try:
         log.info(f"Received chatRequest: {chatRequest.model_dump()}")
@@ -448,6 +446,7 @@ async def chat(
                 yield f"data: {chunk}\n\n"
 
         async def generate_response():
+            print(chatRequest.messages)
             try:
                 # Get the last user message
                 if len(chatRequest.messages) > 0:
