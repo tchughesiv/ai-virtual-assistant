@@ -145,7 +145,7 @@ class Chat:
                         "strategy": {"type": "greedy"},
                         "max_tokens": 512,
                     },
-                ).initialize()
+                )  # .initialize()
         except Exception as e:
             self.log.error(f"Error creating agent with ID {agent_id}: {e}")
             raise
