@@ -72,11 +72,7 @@ class Chat:
         try:
             agent_config = await self._get_agent_config(agent_id)
             print("agent_config = " + str(agent_config))
-            if (
-                agent_config
-                and hasattr(agent_config, "tool_config")
-                and agent_config.tool_config
-            ):
+            if agent_config and agent_config.tool_config:
                 print(str(agent_config.tool_config))
                 # return agent_config.tool_config.tools
                 return []
@@ -85,7 +81,7 @@ class Chat:
             self.log.error(f"Error retrieving tools for agent {agent_id}: {e}")
             return []
 
-    async def _get_model_for_agent(self, agent_id: str):
+    async def _get_model_for_agent(self, agent_id: str) -> str:
         """
         Retrieve model configuration for an agent from LlamaStack.
 
