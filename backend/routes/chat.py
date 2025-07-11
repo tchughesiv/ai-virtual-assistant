@@ -119,7 +119,7 @@ class Chat:
 
             model = await self._get_model_for_agent(agent_id)
             tools = await self._get_tools_for_agent(agent_id)
-            print("tools = " + tools)
+            print("tools = " + str(tools))
 
             # Determine agent type from config (default to REGULAR)
             agent_type = AgentType.REGULAR
