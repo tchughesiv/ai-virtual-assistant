@@ -450,7 +450,6 @@ async def chat(
                 # Get the last user message
                 if len(chatRequest.messages) > 0:
                     last_message = chatRequest.messages[-1]
-                    print(last_message)
                     await async_process_data(generate_async_data(last_message.content))
 
                 yield "data: [DONE]\n\n"

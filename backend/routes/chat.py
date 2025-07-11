@@ -463,6 +463,7 @@ class Chat:
         yield json.dumps({"type": "session", "sessionId": session_id})
 
         async for response in turn_response:
+            print(response)
             if hasattr(response.event, "payload"):
                 logger.debug(response.event.payload)
                 if response.event.payload.event_type == "step_progress":
@@ -539,6 +540,8 @@ class Chat:
             # Determine agent type (defaulting to REGULAR for now)
             agent_type = AgentType.REGULAR
             print(turn_response)
+            print(agent.agent_config)
+            print(prompt)
 
             # async for event in AgentEventLogger().log(turn_response):
             #    event.print()
