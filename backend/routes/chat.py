@@ -72,8 +72,8 @@ class Chat:
         try:
             agent_config = await self._get_agent_config(agent_id)
             print("agent_config = " + str(agent_config))
-            if agent_config and agent_config.tool_config:
-                print(str(agent_config.tool_config))
+            if agent_config and agent_config["tool_config"]:
+                print(str(agent_config["tool_config"]))
                 # return agent_config.tool_config.tools
                 return []
             return []
