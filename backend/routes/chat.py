@@ -72,6 +72,8 @@ class Chat:
         """
         try:
             agent_config = await self._get_agent_config(agent_id)
+            print(agent_config)
+            print(agent_config.tool_config)
             if (
                 agent_config
                 and hasattr(agent_config, "tool_config")
@@ -107,7 +109,7 @@ class Chat:
             self.log.error(f"Error retrieving model for agent {agent_id}: {e}")
             return "llama-3.1-8b-instruct"
 
-    async def _create_agent_with_existing_id(self, agent_id: str, session_id: str):
+    async def _create_agent_with_existing_id(self, agent_id: str):
         """Create an agent instance using an existing agent_id from LlamaStack."""
         try:
             print(agent_id)
