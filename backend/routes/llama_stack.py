@@ -396,6 +396,8 @@ async def chat(
             - 400 if session ID is missing
             - 500 for internal server errors during chat processing
     """
+    print(chatRequest.messages)
+
     client = get_client_from_request(request)
     try:
         log.info(f"Received chatRequest: {chatRequest.model_dump()}")
