@@ -1,9 +1,11 @@
 import enum
 import json
 import os
+from typing import AsyncIterator
 
 from fastapi import Request
-from llama_stack_client import AgentEventLogger
+
+# from llama_stack_client import AgentEventLogger
 from llama_stack_client.lib.agents.react.tool_parser import ReActOutput
 
 from ..agents import ExistingAsyncAgent, ExistingReActAgent
@@ -454,11 +456,13 @@ class Chat:
         # Return as JSON object with type and content
         yield json.dumps({"type": "text", "content": summary_text})
 
-    def _handle_regular_response(self, turn_response, session_id: str):
+    async def _handle_regular_response(
+        self, turn_response: AsyncIterator, session_id: str
+    ):
         # Send session ID first to help client initialize the connection
         yield json.dumps({"type": "session", "sessionId": session_id})
 
-        for response in turn_response:
+        async for response in turn_response:
             if hasattr(response.event, "payload"):
                 logger.debug(response.event.payload)
                 if response.event.payload.event_type == "step_progress":
@@ -536,9 +540,10 @@ class Chat:
             agent_type = AgentType.REGULAR
             print(turn_response)
 
+            # async for event in AgentEventLogger().log(turn_response):
+            #    event.print()
+
             # Stream the response
-            async for event in AgentEventLogger().log(turn_response):
-                event.print()
             self._response_generator(turn_response, session_id, agent_type)
 
         except Exception as e:
