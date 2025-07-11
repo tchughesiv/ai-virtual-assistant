@@ -54,8 +54,8 @@ class Chat:
             Agent configuration object or None if not found
         """
         try:
-            agent_config = await self._get_client().agents.retrieve(agent_id=agent_id)
-            return agent_config
+            agent = await self._get_client().agents.retrieve(agent_id=agent_id)
+            return agent.agent_config
         except Exception as e:
             self.log.error(f"Error retrieving agent config for {agent_id}: {e}")
             return None
