@@ -44,6 +44,17 @@ class ExistingAsyncAgent(AsyncAgent):
         # Set the agent_id directly instead of calling initialize()
         self.agent_id = agent_id
 
+    @property
+    def agent_id(self):
+        return self._agent_id
+
+    @agent_id.setter
+    def agent_id(self, value):
+        # You can add validation or other logic here
+        if not isinstance(value, str):
+            raise TypeError("agent_id must be a string")
+        self._agent_id = value
+
 
 class ExistingReActAgent(ReActAgent):
     """An extension of the ReActAgent class with an existing agent_id."""
