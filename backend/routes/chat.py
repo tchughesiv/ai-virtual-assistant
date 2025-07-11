@@ -6,7 +6,7 @@ from fastapi import Request
 from llama_stack_client import AgentEventLogger
 from llama_stack_client.lib.agents.react.tool_parser import ReActOutput
 
-from ..agents import ExistingAgent, ExistingReActAgent
+from ..agents import ExistingAsyncAgent, ExistingReActAgent
 from ..api.llamastack import get_client_from_request
 from ..utils.logging_config import get_logger
 
@@ -132,7 +132,7 @@ class Chat:
                     sampling_params={"strategy": {"type": "greedy"}, "max_tokens": 512},
                 )
             else:
-                return ExistingAgent(
+                return ExistingAsyncAgent(
                     self._get_client(),
                     agent_id=agent_id,
                     model=model,

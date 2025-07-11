@@ -1,7 +1,6 @@
 from typing import Any, Callable, List, Optional, Tuple, Union
 
-from llama_stack_client import Agent
-from llama_stack_client.lib.agents.agent import AgentConfig  # , AsyncAgent
+from llama_stack_client.lib.agents.agent import AgentConfig, AsyncAgent
 from llama_stack_client.lib.agents.client_tool import ClientTool
 from llama_stack_client.lib.agents.react.agent import ReActAgent
 from llama_stack_client.lib.agents.tool_parser import ToolParser
@@ -10,8 +9,8 @@ from llama_stack_client.types.agents.turn_create_params import Toolgroup
 from llama_stack_client.types.shared_params.agent_config import ToolConfig
 
 
-class ExistingAgent(Agent):
-    """An extension of the Agent class with an existing agent_id."""
+class ExistingAsyncAgent(AsyncAgent):
+    """An extension of the AsyncAgent class with an existing agent_id."""
 
     def __init__(
         self,
@@ -40,7 +39,7 @@ class ExistingAgent(Agent):
         self.tool_parser = tool_parser
         self.sessions = []
         self.builtin_tools = {}
-        self.extra_headers = {}
+        # self.extra_headers = {}
 
         # Set the agent_id directly instead of calling initialize()
         self.agent_id = agent_id
