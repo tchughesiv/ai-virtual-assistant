@@ -465,9 +465,7 @@ async def chat(
                 log.error(f"Error in stream: {str(e)}")
                 yield f'data: {{"type":"error","content":"Error: {str(e)}"}}\n\n'
 
-        return StreamingResponse(
-            await generate_response(), media_type="text/event-stream"
-        )
+        return StreamingResponse(generate_response(), media_type="text/event-stream")
 
     except Exception as e:
         log.error(f"Error in chat endpoint: {str(e)}")
