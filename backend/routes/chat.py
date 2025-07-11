@@ -4,10 +4,9 @@ import os
 
 from fastapi import Request
 from llama_stack_client import AgentEventLogger
-from llama_stack_client.lib.agents.agent import AsyncAgent
 from llama_stack_client.lib.agents.react.tool_parser import ReActOutput
 
-from ..agents import ExistingReActAgent
+from ..agents import ExistingAgent, ExistingReActAgent
 from ..api.llamastack import get_client_from_request
 from ..utils.logging_config import get_logger
 
@@ -133,9 +132,9 @@ class Chat:
                     sampling_params={"strategy": {"type": "greedy"}, "max_tokens": 512},
                 )
             else:
-                return AsyncAgent(
+                return ExistingAgent(
                     self._get_client(),
-                    # agent_id=agent_id,
+                    agent_id=agent_id,
                     model=model,
                     instructions=(
                         "You are a helpful assistant. When you use a tool "
@@ -146,7 +145,7 @@ class Chat:
                         "strategy": {"type": "greedy"},
                         "max_tokens": 512,
                     },
-                )
+                ).initialize()
         except Exception as e:
             self.log.error(f"Error creating agent with ID {agent_id}: {e}")
             raise
