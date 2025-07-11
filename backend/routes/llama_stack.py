@@ -466,7 +466,8 @@ async def chat(
                 yield f'data: {{"type":"error","content":"Error: {str(e)}"}}\n\n'
 
         return StreamingResponse(
-            asyncio.run(generate_response()), media_type="text/event-stream"
+            asyncio.run(asyncio.get_running_loop().create_task(generate_response())),
+            media_type="text/event-stream",
         )
 
     except Exception as e:
