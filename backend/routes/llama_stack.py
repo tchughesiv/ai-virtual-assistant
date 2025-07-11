@@ -466,9 +466,6 @@ async def chat(
                 log.error(f"Error in stream: {str(e)}")
                 yield f'data: {{"type":"error","content":"Error: {str(e)}"}}\n\n'
 
-        async def main():
-            await async_process_data(generate_async_data())
-
         return StreamingResponse(
             generate_response(),
             media_type="text/event-stream",
