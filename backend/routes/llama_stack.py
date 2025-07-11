@@ -435,13 +435,13 @@ async def chat(
         # Create stateless Chat instance (no longer needs assistant or session_state)
         chat = Chat(log, request)
 
-        def generate_response():
+        async def generate_response():
             try:
                 # Get the last user message
                 if len(chatRequest.messages) > 0:
                     last_message = chatRequest.messages[-1]
 
-                    for chunk in chat.stream(
+                    for chunk in await chat.stream(
                         agent_id, session_id, last_message.content
                     ):
                         yield f"data: {chunk}\n\n"
@@ -462,7 +462,9 @@ async def chat(
                 log.error(f"Error in stream: {str(e)}")
                 yield f'data: {{"type":"error","content":"Error: {str(e)}"}}\n\n'
 
-        return StreamingResponse(generate_response(), media_type="text/event-stream")
+        return StreamingResponse(
+            await generate_response(), media_type="text/event-stream"
+        )
 
     except Exception as e:
         log.error(f"Error in chat endpoint: {str(e)}")

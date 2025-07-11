@@ -1,10 +1,10 @@
-import asyncio
 import enum
 import json
 import os
 
 from fastapi import Request
-from llama_stack_client import Agent, AgentEventLogger
+from llama_stack_client import AgentEventLogger
+from llama_stack_client.lib.agents.agent import AsyncAgent
 from llama_stack_client.lib.agents.react.tool_parser import ReActOutput
 
 from ..agents import ExistingReActAgent
@@ -133,7 +133,7 @@ class Chat:
                     sampling_params={"strategy": {"type": "greedy"}, "max_tokens": 512},
                 )
             else:
-                return Agent(
+                return AsyncAgent(
                     self._get_client(),
                     # agent_id=agent_id,
                     model=model,
@@ -505,7 +505,7 @@ class Chat:
                     }
                 )
 
-    def stream(self, agent_id: str, session_id: str, prompt: str):
+    async def stream(self, agent_id: str, session_id: str, prompt: str):
         """
         Stream chat response using LlamaStack as the single source of truth.
 
@@ -515,26 +515,21 @@ class Chat:
             prompt: The user's message
         """
         try:
+            # Create agent instance using existing agent_id
+            agent = await self._create_agent_with_existing_id(agent_id, session_id)
+            self.log.info(f"Using agent: {agent_id} with session: {session_id}")
 
-            async def test():
-                # Create agent instance using existing agent_id
-                agent = await self._create_agent_with_existing_id(agent_id, session_id)
-                self.log.info(f"Using agent: {agent_id} with session: {session_id}")
+            # Get existing messages from the session
+            # Note: LlamaStack manages session state, so we don't need to
+            # maintain local state
+            messages = [{"role": "user", "content": prompt}]
 
-                # Get existing messages from the session
-                # Note: LlamaStack manages session state, so we don't need to
-                # maintain local state
-                messages = [{"role": "user", "content": prompt}]
-
-                # Create turn with LlamaStack
-                turn_response = await agent.create_turn(
-                    session_id=session_id,
-                    messages=messages,
-                    stream=True,
-                )
-                return turn_response
-
-            turn_response = asyncio.run(test())
+            # Create turn with LlamaStack
+            turn_response = await agent.create_turn(
+                session_id=session_id,
+                messages=messages,
+                stream=True,
+            )
 
             # Determine agent type (defaulting to REGULAR for now)
             agent_type = AgentType.REGULAR
