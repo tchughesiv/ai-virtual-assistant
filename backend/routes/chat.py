@@ -4,8 +4,7 @@ import os
 from typing import AsyncIterator
 
 from fastapi import Request
-
-# from llama_stack_client import AgentEventLogger
+from llama_stack_client.lib.agents.agent import AgentConfig
 from llama_stack_client.lib.agents.react.tool_parser import ReActOutput
 
 from ..agents import ExistingAsyncAgent, ExistingReActAgent
@@ -43,7 +42,7 @@ class Chat:
     def _get_client(self):
         return get_client_from_request(self.request)
 
-    async def _get_agent_config(self, agent_id: str):
+    async def _get_agent_config(self, agent_id: str) -> AgentConfig | None:
         """
         Retrieve agent configuration from LlamaStack.
 
@@ -79,7 +78,8 @@ class Chat:
                 and agent_config.tool_config
             ):
                 print(str(agent_config.tool_config))
-                return agent_config.tool_config.tools
+                # return agent_config.tool_config.tools
+                return []
             return []
         except Exception as e:
             self.log.error(f"Error retrieving tools for agent {agent_id}: {e}")
