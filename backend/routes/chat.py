@@ -110,7 +110,9 @@ class Chat:
     async def _create_agent_with_existing_id(self, agent_id: str, session_id: str):
         """Create an agent instance using an existing agent_id from LlamaStack."""
         try:
+            print(agent_id)
             agent_config = await self._get_agent_config(agent_id)
+            print(agent_config)
             if not agent_config:
                 raise Exception(f"Agent {agent_id} not found")
 
