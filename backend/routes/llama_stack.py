@@ -17,6 +17,7 @@ session state in both LlamaStack and the local database for UI features
 like conversation history sidebars.
 """
 
+import asyncio
 import json
 import logging
 from typing import Any, Dict, List, Literal, Optional
@@ -435,20 +436,20 @@ async def chat(
         # Create stateless Chat instance (no longer needs assistant or session_state)
         chat = Chat(log, request)
 
-        async def generate_response():
+        def generate_response():
             try:
                 # Get the last user message
                 if len(chatRequest.messages) > 0:
                     last_message = chatRequest.messages[-1]
 
-                    async for chunk in chat.stream(
-                        agent_id, session_id, last_message.content
+                    for chunk in asyncio.run(
+                        chat.stream(agent_id, session_id, last_message.content)
                     ):
-                        # yield f"data: {chunk}\n\n"
                         print(f"data: {chunk}\n\n")
+                        yield f"data: {chunk}\n\n"
 
-                # yield "data: [DONE]\n\n"
                 print("data: [DONE]\n\n")
+                yield "data: [DONE]\n\n"
 
                 # Save session metadata to database
                 background_task.add_task(
@@ -462,7 +463,7 @@ async def chat(
 
             except Exception as e:
                 log.error(f"Error in stream: {str(e)}")
-                # yield f'data: {{"type":"error","content":"Error: {str(e)}"}}\n\n'
+                yield f'data: {{"type":"error","content":"Error: {str(e)}"}}\n\n'
 
         return StreamingResponse(
             await generate_response(), media_type="text/event-stream"
