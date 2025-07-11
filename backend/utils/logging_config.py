@@ -12,7 +12,7 @@ from typing import Optional
 
 
 def setup_logging(
-    level: str = "DEBUG",
+    level: str = "INFO",
     log_file: Optional[str] = None,
     format_string: Optional[str] = None,
 ) -> None:

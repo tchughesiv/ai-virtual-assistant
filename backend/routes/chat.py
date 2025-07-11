@@ -539,7 +539,7 @@ class Chat:
             print(turn_response)
 
             # Stream the response
-            async for event in AgentEventLogger().log(turn_response):
+            for event in AgentEventLogger().log(turn_response):
                 event.print()
             self._response_generator(turn_response, session_id, agent_type)
 

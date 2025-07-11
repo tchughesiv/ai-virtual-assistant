@@ -44,7 +44,7 @@ core_v1 = client.CoreV1Api()
 load_dotenv()
 
 # Configure centralized logging
-setup_logging(level="INFO")
+setup_logging(level="DEBUG")
 logger = get_logger(__name__)
 
 
