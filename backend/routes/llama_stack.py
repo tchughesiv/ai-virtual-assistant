@@ -17,7 +17,6 @@ session state in both LlamaStack and the local database for UI features
 like conversation history sidebars.
 """
 
-import asyncio
 import json
 import logging
 from typing import Any, Dict, List, Literal, Optional
@@ -466,7 +465,7 @@ async def chat(
                 yield f'data: {{"type":"error","content":"Error: {str(e)}"}}\n\n'
 
         return StreamingResponse(
-            asyncio.run(asyncio.get_running_loop().create_task(generate_response())),
+            generate_response(),
             media_type="text/event-stream",
         )
 
