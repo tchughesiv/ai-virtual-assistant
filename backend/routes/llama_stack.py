@@ -442,6 +442,7 @@ async def chat(
         async def generate_async_data(last_message_content: str):
             print(last_message_content)
             async for chunk in chat.stream(agent_id, session_id, last_message_content):
+                print(...)
                 yield f"data: {chunk}\n\n"
 
         async def generate_response():
@@ -449,9 +450,7 @@ async def chat(
                 # Get the last user message
                 if len(chatRequest.messages) > 0:
                     last_message = chatRequest.messages[-1]
-                    await async_process_data(
-                        await generate_async_data(last_message.content)
-                    )
+                    await async_process_data(generate_async_data(last_message.content))
 
                 yield "data: [DONE]\n\n"
 
