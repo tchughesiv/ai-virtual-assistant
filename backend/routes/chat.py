@@ -148,7 +148,7 @@ class Chat:
             self.log.error(f"Error creating agent with ID {agent_id}: {e}")
             raise
 
-    async def _response_generator(
+    def _response_generator(
         self, turn_response, session_id: str, agent_type: AgentType
     ):
         if agent_type == AgentType.REACT:
