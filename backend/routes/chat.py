@@ -547,7 +547,7 @@ class Chat:
             #    event.print()
 
             # Stream the response
-            await self._response_generator(turn_response, session_id, agent_type)
+            self._response_generator(turn_response, session_id, agent_type)
 
         except Exception as e:
             self.log.error(
