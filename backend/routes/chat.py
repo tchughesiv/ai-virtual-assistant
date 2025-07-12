@@ -1,11 +1,11 @@
 import enum
 import json
 import os
-from typing import AsyncIterator
+from typing import AsyncIterator, List
 
 from fastapi import Request
 from llama_stack_client.lib.agents.react.tool_parser import ReActOutput
-from llama_stack_client.types.shared_params.agent_config import AgentConfig
+from llama_stack_client.types.shared_params.agent_config import AgentConfig, Toolgroup
 
 from ..agents import ExistingAsyncAgent, ExistingReActAgent
 from ..api.llamastack import get_client_from_request
@@ -59,7 +59,7 @@ class Chat:
             self.log.error(f"Error retrieving agent config for {agent_id}: {e}")
             return None
 
-    async def _get_tools_for_agent(self, agent_id: str):
+    async def _get_toolgroups_for_agent(self, agent_id: str) -> List[Toolgroup]:
         """
         Retrieve tools configuration for an agent from LlamaStack.
 
@@ -72,10 +72,9 @@ class Chat:
         try:
             agent_config = await self._get_agent_config(agent_id)
             print("agent_config = " + str(agent_config))
-            if agent_config and agent_config["tool_config"]:
-                print(str(agent_config["tool_config"]))
-                # return agent_config.tool_config.tools
-                return []
+            if agent_config and agent_config["toolgroups"]:
+                print(str(agent_config["toolgroups"]))
+                return agent_config.toolgroups
             return []
         except Exception as e:
             self.log.error(f"Error retrieving tools for agent {agent_id}: {e}")
@@ -114,8 +113,8 @@ class Chat:
                 raise Exception(f"Agent {agent_id} not found")
 
             model = await self._get_model_for_agent(agent_id)
-            tools = await self._get_tools_for_agent(agent_id)
-            print("tools = " + str(tools))
+            toolgroups = await self._get_toolgroups_for_agent(agent_id)
+            print("tools = " + str(toolgroups))
 
             # Determine agent type from config (default to REGULAR)
             agent_type = AgentType.REGULAR
@@ -126,7 +125,7 @@ class Chat:
                     self._get_client(),
                     agent_id=agent_id,
                     model=model,
-                    tools=tools,
+                    tools=toolgroups,
                     response_format={
                         "type": "json_schema",
                         "json_schema": ReActOutput.model_json_schema(),
@@ -142,7 +141,7 @@ class Chat:
                         "You are a helpful assistant. When you use a tool "
                         "always respond with a summary of the result."
                     ),
-                    tools=tools,
+                    tools=toolgroups,
                     sampling_params={
                         "strategy": {"type": "greedy"},
                         "max_tokens": 512,
