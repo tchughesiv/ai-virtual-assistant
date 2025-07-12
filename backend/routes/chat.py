@@ -71,7 +71,6 @@ class Chat:
         """
         try:
             agent_config = await self._get_agent_config(agent_id)
-            print("agent_config = " + str(agent_config))
             if agent_config and agent_config["toolgroups"]:
                 return agent_config["toolgroups"]
             return []
@@ -106,7 +105,6 @@ class Chat:
     async def _create_agent_with_existing_id(self, agent_id: str):
         """Create an agent instance using an existing agent_id from LlamaStack."""
         try:
-            print(agent_id)
             agent_config = await self._get_agent_config(agent_id)
             if not agent_config:
                 raise Exception(f"Agent {agent_id} not found")
@@ -463,7 +461,7 @@ class Chat:
         yield json.dumps({"type": "session", "sessionId": session_id})
 
         async for response in turn_response:
-            print(response)
+            print(str(response))
             if hasattr(response.event, "payload"):
                 logger.debug(response.event.payload)
                 if response.event.payload.event_type == "step_progress":
@@ -547,6 +545,9 @@ class Chat:
 
             # async for event in AgentEventLogger().log(turn_response):
             #    event.print()
+
+            async for response in turn_response:
+                print(str(response))
 
             # Stream the response
             self._response_generator(turn_response, session_id, agent_type)
