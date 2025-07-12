@@ -454,9 +454,6 @@ class Chat:
     async def _handle_regular_response(
         self, turn_response: AsyncIterator, session_id: str
     ):
-        async for response in turn_response:
-            print(str(response))
-
         # Send session ID first to help client initialize the connection
         yield json.dumps({"type": "session", "sessionId": session_id})
 

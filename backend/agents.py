@@ -39,7 +39,7 @@ class ExistingAsyncAgent(AsyncAgent):
         self.tool_parser = tool_parser
         self.sessions = []
         self.builtin_tools = {}
-        # self.extra_headers = {}
+        self.extra_headers = {}
 
         # Set the agent_id directly instead of calling initialize()
         self.agent_id = agent_id
