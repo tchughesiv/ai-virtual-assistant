@@ -74,7 +74,7 @@ class Chat:
             print("agent_config = " + str(agent_config))
             if agent_config and agent_config["toolgroups"]:
                 print(str(agent_config["toolgroups"]))
-                return agent_config.toolgroups
+                return agent_config["toolgroups"]
             return []
         except Exception as e:
             self.log.error(f"Error retrieving tools for agent {agent_id}: {e}")
