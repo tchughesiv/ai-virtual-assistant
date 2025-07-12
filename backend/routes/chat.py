@@ -73,7 +73,6 @@ class Chat:
             agent_config = await self._get_agent_config(agent_id)
             print("agent_config = " + str(agent_config))
             if agent_config and agent_config["toolgroups"]:
-                print(str(agent_config["toolgroups"]))
                 return agent_config["toolgroups"]
             return []
         except Exception as e:
@@ -114,7 +113,6 @@ class Chat:
 
             model = await self._get_model_for_agent(agent_id)
             toolgroups = await self._get_toolgroups_for_agent(agent_id)
-            print("tools = " + str(toolgroups))
 
             # Determine agent type from config (default to REGULAR)
             agent_type = AgentType.REGULAR
@@ -146,7 +144,7 @@ class Chat:
                         "strategy": {"type": "greedy"},
                         "max_tokens": 512,
                     },
-                )  # .initialize()
+                )
         except Exception as e:
             self.log.error(f"Error creating agent with ID {agent_id}: {e}")
             raise
@@ -458,6 +456,9 @@ class Chat:
     async def _handle_regular_response(
         self, turn_response: AsyncIterator, session_id: str
     ):
+        async for response in turn_response:
+            print(str(response))
+
         # Send session ID first to help client initialize the connection
         yield json.dumps({"type": "session", "sessionId": session_id})
 
@@ -538,9 +539,10 @@ class Chat:
 
             # Determine agent type (defaulting to REGULAR for now)
             agent_type = AgentType.REGULAR
-            print(turn_response)
+
             print(agent.tools)
             print(agent.agent_id)
+            print(agent.model)
             print(prompt)
 
             # async for event in AgentEventLogger().log(turn_response):
