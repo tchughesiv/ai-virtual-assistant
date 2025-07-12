@@ -1,3 +1,4 @@
+import asyncio
 import enum
 import json
 import os
@@ -153,7 +154,7 @@ class Chat:
         if agent_type == AgentType.REACT:
             return self._handle_react_response(turn_response, session_id)
         else:
-            return await self._handle_regular_response(turn_response, session_id)
+            return self._handle_regular_response(turn_response, session_id)
 
     def _handle_react_response(self, turn_response, session_id: str):
         current_step_content = ""
@@ -451,61 +452,61 @@ class Chat:
         # Return as JSON object with type and content
         yield json.dumps({"type": "text", "content": summary_text})
 
-    async def _handle_regular_response(
-        self, turn_response: AsyncIterator, session_id: str
-    ):
-        # async for response in turn_response:
-        #    print(str(response))
-
+    def _handle_regular_response(self, turn_response: AsyncIterator, session_id: str):
         # Send session ID first to help client initialize the connection
         yield json.dumps({"type": "session", "sessionId": session_id})
 
-        async for response in turn_response:
-            print(str(response))
-            if hasattr(response.event, "payload"):
-                logger.debug(response.event.payload)
-                if response.event.payload.event_type == "step_progress":
-                    if hasattr(response.event.payload.delta, "text"):
-                        # Format as JSON for AI SDK compatibility
-                        yield json.dumps(
-                            {
-                                "type": "text",
-                                "content": response.event.payload.delta.text,
-                            }
-                        )
-                if response.event.payload.event_type == "step_complete":
-                    if (
-                        response.event.payload.step_details.step_type
-                        == "tool_execution"
-                    ):
-                        if response.event.payload.step_details.tool_calls:
-                            tool_call = response.event.payload.step_details.tool_calls[
-                                0
-                            ]
-                            tool_name = str(tool_call.tool_name)
-                            yield json.dumps(
-                                {
-                                    "type": "tool",
-                                    "content": f'Using "{tool_name}" tool:',
-                                    "tool": {"name": tool_name},
-                                }
-                            )
-                        else:
+        async def process_response(turn_response: AsyncIterator):
+            async for response in turn_response:
+                print(str(response))
+                if hasattr(response.event, "payload"):
+                    logger.debug(response.event.payload)
+                    if response.event.payload.event_type == "step_progress":
+                        if hasattr(response.event.payload.delta, "text"):
+                            # Format as JSON for AI SDK compatibility
                             yield json.dumps(
                                 {
                                     "type": "text",
-                                    "content": "No tool_calls present in step_details",
+                                    "content": response.event.payload.delta.text,
                                 }
                             )
-            else:
-                yield json.dumps(
-                    {
-                        "type": "error",
-                        "content": (
-                            f"Error occurred in the Llama Stack Cluster: " f"{response}"
-                        ),
-                    }
-                )
+                    if response.event.payload.event_type == "step_complete":
+                        if (
+                            response.event.payload.step_details.step_type
+                            == "tool_execution"
+                        ):
+                            if response.event.payload.step_details.tool_calls:
+                                tool_call = (
+                                    response.event.payload.step_details.tool_calls[0]
+                                )
+                                tool_name = str(tool_call.tool_name)
+                                yield json.dumps(
+                                    {
+                                        "type": "tool",
+                                        "content": f'Using "{tool_name}" tool:',
+                                        "tool": {"name": tool_name},
+                                    }
+                                )
+                            else:
+                                yield json.dumps(
+                                    {
+                                        "type": "text",
+                                        "content": "No tool_calls present in \
+                                            step_details",
+                                    }
+                                )
+                else:
+                    yield json.dumps(
+                        {
+                            "type": "error",
+                            "content": (
+                                f"Error occurred in the Llama Stack Cluster: "
+                                f"{response}"
+                            ),
+                        }
+                    )
+
+        asyncio.run(process_response(turn_response))
 
     async def stream(self, agent_id: str, session_id: str, prompt: str):
         """
