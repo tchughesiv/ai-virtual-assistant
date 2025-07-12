@@ -548,6 +548,9 @@ class Chat:
             #    event.print()
 
             # Stream the response
+            async for response in turn_response:
+                print(str(response))
+
             self._response_generator(turn_response, session_id, agent_type)
 
         except Exception as e:
