@@ -147,13 +147,13 @@ class Chat:
             self.log.error(f"Error creating agent with ID {agent_id}: {e}")
             raise
 
-    def _response_generator(
+    async def _response_generator(
         self, turn_response, session_id: str, agent_type: AgentType
     ):
         if agent_type == AgentType.REACT:
             return self._handle_react_response(turn_response, session_id)
         else:
-            return self._handle_regular_response(turn_response, session_id)
+            return await self._handle_regular_response(turn_response, session_id)
 
     def _handle_react_response(self, turn_response, session_id: str):
         current_step_content = ""
@@ -454,8 +454,8 @@ class Chat:
     async def _handle_regular_response(
         self, turn_response: AsyncIterator, session_id: str
     ):
-        async for response in turn_response:
-            print(str(response))
+        # async for response in turn_response:
+        #    print(str(response))
 
         # Send session ID first to help client initialize the connection
         yield json.dumps({"type": "session", "sessionId": session_id})
@@ -547,7 +547,7 @@ class Chat:
             #    event.print()
 
             # Stream the response
-            self._response_generator(turn_response, session_id, agent_type)
+            await self._response_generator(turn_response, session_id, agent_type)
 
         except Exception as e:
             self.log.error(
